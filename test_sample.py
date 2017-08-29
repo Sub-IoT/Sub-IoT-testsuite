@@ -12,12 +12,12 @@ from d7a.types.ct import CT
 from modem.modem import Modem
 
 @pytest.fixture(scope="module")
-def test_device():
-    return Modem("/dev/d7_b570091418", 115200, None, show_logging=False)
+def test_device(serial_test_device):
+    return Modem(serial_test_device, 115200, None, show_logging=True)
 
 @pytest.fixture(scope="module")
-def dut():
-    return Modem("/dev/ttyACM1", 115200, None)
+def dut(serial_dut):
+    return Modem(serial_dut, 115200, None)
 
 
 # def test_modem_open_connection(modem):
