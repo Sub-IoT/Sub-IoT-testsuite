@@ -3,4 +3,6 @@ import sys
 import pytest
 
 sys.path.append('lib/pyd7a')
-pytest.main(["-v", "--timeout=10"])
+args = ["-v", "--timeout=10"]
+args.extend(sys.argv[1:])
+pytest.main(args=args)
