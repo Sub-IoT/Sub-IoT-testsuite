@@ -16,10 +16,17 @@ from d7a.types.ct import CT
 from modem.modem import Modem
 
 
-def change_access_profile(modem, channel_header, channel_index):
+def change_access_profile(modem, channel_header, channel_index, enable_channel_scan):
+  # we assume only one subprofile and one subband for now. By setting enable_channel_scan we are listening continuously on
+  # the channel_index
+  if enable_channel_scan:
+    subband_bitmap = 0x01
+  else:
+    subband_bitmap = 0
+
   access_profile = AccessProfile(
     channel_header=channel_header,
-    sub_profiles=[SubProfile(subband_bitmap=0x01, scan_automation_period=CT(exp=0, mant=0)), SubProfile(), SubProfile(),
+    sub_profiles=[SubProfile(subband_bitmap=subband_bitmap, scan_automation_period=CT(exp=0, mant=0)), SubProfile(), SubProfile(),
                   SubProfile()],
     sub_bands=[SubBand(
       channel_index_start=channel_index,
@@ -39,8 +46,10 @@ def test_868_N_000(test_device, dut):
                                    channel_coding=ChannelCoding.PN9,
                                    channel_class=ChannelClass.NORMAL_RATE)
     channel_index = 0
-    change_access_profile(dut, channel_header, channel_index)
-    change_access_profile(test_device, channel_header, channel_index)
+    change_access_profile(dut, channel_header, channel_index, enable_channel_scan=True)
+    change_access_profile(test_device, channel_header, channel_index, enable_channel_scan=False)
+
+    #sleep(1)
 
     interface_configuration = Configuration(
         qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
@@ -78,8 +87,8 @@ def test_868_H_000(test_device, dut):
                                  channel_coding=ChannelCoding.PN9,
                                  channel_class=ChannelClass.HI_RATE)
   channel_index = 0
-  change_access_profile(dut, channel_header, channel_index)
-  change_access_profile(test_device, channel_header, channel_index)
+  change_access_profile(dut, channel_header, channel_index, enable_channel_scan=True)
+  change_access_profile(test_device, channel_header, channel_index, enable_channel_scan=False)
 
   interface_configuration = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
@@ -117,8 +126,8 @@ def test_868_L_000(test_device, dut):
                                  channel_coding=ChannelCoding.PN9,
                                  channel_class=ChannelClass.LO_RATE)
   channel_index = 0
-  change_access_profile(dut, channel_header, channel_index)
-  change_access_profile(test_device, channel_header, channel_index)
+  change_access_profile(dut, channel_header, channel_index, enable_channel_scan=True)
+  change_access_profile(test_device, channel_header, channel_index, enable_channel_scan=False)
 
   interface_configuration = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
