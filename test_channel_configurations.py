@@ -16,7 +16,7 @@ from d7a.types.ct import CT
 from modem.modem import Modem
 
 
-def change_access_profile(modem, channel_header, channel_index=0):
+def change_access_profile(modem, channel_header, channel_index):
   access_profile = AccessProfile(
     channel_header=channel_header,
     sub_profiles=[SubProfile(subband_bitmap=0x01, scan_automation_period=CT(exp=0, mant=0)), SubProfile(), SubProfile(),
@@ -38,8 +38,9 @@ def test_868_N_000(test_device, dut):
     channel_header = ChannelHeader(channel_band=ChannelBand.BAND_868,
                                    channel_coding=ChannelCoding.PN9,
                                    channel_class=ChannelClass.NORMAL_RATE)
-    change_access_profile(dut, channel_header)
-    change_access_profile(test_device, channel_header)
+    channel_index = 0
+    change_access_profile(dut, channel_header, channel_index)
+    change_access_profile(test_device, channel_header, channel_index)
 
     interface_configuration = Configuration(
         qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
@@ -64,8 +65,11 @@ def test_868_N_000(test_device, dut):
 
     assert len(dut.get_unsolicited_responses_received()) == 1, "DUT should have received 1 unsolicited response from test device"
 
-    assert(dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_header == channel_header,
-      "Received using unexpected channel header")
+    assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_header == channel_header, \
+      "Received using unexpected channel header"
+
+    assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_index == channel_index, \
+      "Received using unexpected channel index"
 
 
 def test_868_H_000(test_device, dut):
@@ -73,9 +77,9 @@ def test_868_H_000(test_device, dut):
   channel_header = ChannelHeader(channel_band=ChannelBand.BAND_868,
                                  channel_coding=ChannelCoding.PN9,
                                  channel_class=ChannelClass.HI_RATE)
-
-  change_access_profile(dut, channel_header)
-  change_access_profile(test_device, channel_header)
+  channel_index = 0
+  change_access_profile(dut, channel_header, channel_index)
+  change_access_profile(test_device, channel_header, channel_index)
 
   interface_configuration = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
@@ -101,18 +105,20 @@ def test_868_H_000(test_device, dut):
   assert len(
     dut.get_unsolicited_responses_received()) == 1, "DUT should have received 1 unsolicited response from test device"
 
-  assert (dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_header == channel_header,
-          "Received using unexpected channel header")
+  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_header == channel_header, \
+          "Received using unexpected channel header"
 
+  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_index == channel_index, \
+          "Received using unexpected channel index"
 
 def test_868_L_000(test_device, dut):
   dut.clear_unsolicited_responses_received()  # TODO use pytest mechanism to do this for every test
   channel_header = ChannelHeader(channel_band=ChannelBand.BAND_868,
                                  channel_coding=ChannelCoding.PN9,
                                  channel_class=ChannelClass.LO_RATE)
-
-  change_access_profile(dut, channel_header)
-  change_access_profile(test_device, channel_header)
+  channel_index = 0
+  change_access_profile(dut, channel_header, channel_index)
+  change_access_profile(test_device, channel_header, channel_index)
 
   interface_configuration = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
@@ -138,5 +144,8 @@ def test_868_L_000(test_device, dut):
   assert len(
     dut.get_unsolicited_responses_received()) == 1, "DUT should have received 1 unsolicited response from test device"
 
-  assert (dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_header == channel_header,
-          "Received using unexpected channel header")
+  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_header == channel_header, \
+          "Received using unexpected channel header"
+
+  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_index == channel_index, \
+          "Received using unexpected channel index"
