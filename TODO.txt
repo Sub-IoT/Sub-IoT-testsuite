@@ -1,0 +1,1 @@
+- DUT is using GW firmware for now, should be using modem (and adapt APs scan settings from test)
