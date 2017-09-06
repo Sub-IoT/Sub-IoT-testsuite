@@ -1,0 +1,11 @@
+- communication tests 433 and 915, FEC
+- QoS settings
+- QoS stop on error, ack record
+- unicast / bcast, VID
+- subnet
+- NLS
+- D7AActP
+- indirect forward
+- adhoc sync
+- dormant sessions
+- Te
