@@ -2,6 +2,7 @@ from time import sleep
 
 import pytest
 
+from conftest import change_access_profile
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -14,30 +15,6 @@ from d7a.sp.qos import ResponseMode, QoS
 from d7a.system_files.access_profile import AccessProfileFile
 from d7a.types.ct import CT
 from modem.modem import Modem
-
-
-def change_access_profile(modem, channel_header, channel_index, enable_channel_scan):
-  # we assume only one subprofile and one subband for now. By setting enable_channel_scan we are listening continuously on
-  # the channel_index
-  if enable_channel_scan:
-    subband_bitmap = 0x01
-  else:
-    subband_bitmap = 0
-
-  access_profile = AccessProfile(
-    channel_header=channel_header,
-    sub_profiles=[SubProfile(subband_bitmap=subband_bitmap, scan_automation_period=CT(exp=0, mant=0)), SubProfile(), SubProfile(),
-                  SubProfile()],
-    sub_bands=[SubBand(
-      channel_index_start=channel_index,
-      channel_index_end=channel_index,
-      eirp=10,
-      cca=86  # TODO
-    )]
-  )
-
-  resp = modem.execute_command(Command.create_with_write_file_action_system_file(file=AccessProfileFile(access_profile=access_profile, access_specifier=0)))
-  assert resp, "Setting Access Profile failed!"
 
 
 def validate_communication(test_device, dut, channel_header, channel_index):
