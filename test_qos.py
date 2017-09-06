@@ -11,14 +11,6 @@ from d7a.system_files.uid import UidFile
 from d7a.types.ct import CT
 
 
-@pytest.fixture
-def context():
-  class Context(object):
-    pass
-
-  return Context()
-
-
 @scenario('qos.feature', 'Using QoS with response mode No')
 def test_qos_response_mode_no():
   pass

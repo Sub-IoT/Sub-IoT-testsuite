@@ -48,6 +48,14 @@ def default_channel_header():
 def default_channel_index():
   return 0
 
+@pytest.fixture
+def context():
+  class Context(object):
+    pass
+
+  return Context()
+
+
 # TODO move?
 def change_access_profile(modem, channel_header, channel_index, enable_channel_scan):
   # we assume only one subprofile and one subband for now. By setting enable_channel_scan we are listening continuously on
@@ -72,3 +80,4 @@ def change_access_profile(modem, channel_header, channel_index, enable_channel_s
   resp = modem.execute_command(Command.create_with_write_file_action_system_file(
     file=AccessProfileFile(access_profile=access_profile, access_specifier=0)))
   assert resp, "Setting Access Profile failed!"
+
