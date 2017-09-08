@@ -18,60 +18,72 @@ from d7a.system_files.access_profile import AccessProfileFile
 from d7a.types.ct import CT
 from modem.modem import Modem
 
-# Scenario: Communication using channel 868, normal rate, channel index 0
-#     Given a testdevice using an access profile based on these channel setting
-#     And a DUT, using an access profile based on these channel setting and listening for foreground packets
-#     When the testdevice executes a command forwarded to the D7ASP interface using this access profile
-#     Then the responder should receive this command
-
-
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, normal rate, channel index 0')
+          'Communication using 868, normal rate class, channel index 0')
 def test_channel_configuration():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, normal rate, channel index 270')
+          'Communication using 868, normal rate class, channel index 270')
 def test_channel_configuration_2():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, hi rate, channel index 0')
+          'Communication using 868, hi rate class, channel index 0')
 def test_channel_configuration_3():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, hi rate, channel index 270')
+          'Communication using 868, hi rate class, channel index 270')
 def test_channel_configuration_4():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, lo rate, channel index 0')
+          'Communication using 868, lo rate class, channel index 0')
 def test_channel_configuration_5():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, lo rate, channel index 279')
+          'Communication using 868, lo rate class, channel index 279')
 def test_channel_configuration_6():
   pass
 
-@given(parsers.parse("a channel configuration using {band:Number} band, {rate} rate and channel index {index:Number}",
+
+@scenario('channel_configurations.feature',
+          'Communication using 433, normal rate class, channel index 0')
+def test_channel_configuration_7():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 915, normal rate class, channel index 0')
+def test_channel_configuration_8():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 868, lora class, channel index 0')
+def test_channel_configuration_9():
+  pass
+
+@given(parsers.parse("a channel configuration using {band:Number} band, {channel_class} class and channel index {index:Number}",
                      extra_types=dict(Number=int)))
-def channel_configuration(band, rate, index):
+def channel_configuration(band, channel_class, index):
   if band == 868: channel_band = ChannelBand.BAND_868
   elif band == 433: channel_band = ChannelBand.BAND_433
   elif band == 915: channel_band = ChannelBand.BAND_915
   else: raise Exception("Invalid band")
 
-  if rate == "normal": channel_class=ChannelClass.NORMAL_RATE
-  elif rate == "hi": channel_class=ChannelClass.HI_RATE
-  elif rate == "lo": channel_class=ChannelClass.LO_RATE
+  if channel_class == "normal rate": channel_class = ChannelClass.NORMAL_RATE
+  elif channel_class == "hi rate": channel_class = ChannelClass.HI_RATE
+  elif channel_class == "lo rate": channel_class = ChannelClass.LO_RATE
+  elif channel_class == "lora": channel_class = ChannelClass.LORA
   else: raise Exception("Invalid rate")
 
   return {
