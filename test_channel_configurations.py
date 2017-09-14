@@ -100,9 +100,6 @@ def change_access_profile_test_device(test_device, channel_configuration):
 
 @given("a DUT, using an access profile based on this channel configuration and listening for foreground packets")
 def change_access_profile_dut(dut, channel_configuration):
-  channel_header = ChannelHeader(channel_band=ChannelBand.BAND_868,
-                                  channel_coding=ChannelCoding.PN9,
-                                  channel_class=ChannelClass.NORMAL_RATE)
   change_access_profile(dut, channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=True)
   dut.clear_unsolicited_responses_received()
   sleep(0.2)  # give some time to switch AP
