@@ -6,6 +6,7 @@ from d7a.dll.sub_profile import SubProfile
 from d7a.phy.channel_header import ChannelHeader, ChannelBand, ChannelCoding, ChannelClass
 from d7a.phy.subband import SubBand
 from d7a.system_files.access_profile import AccessProfileFile
+from d7a.system_files.dll_config import DllConfigFile
 from d7a.types.ct import CT
 from modem.modem import Modem
 
@@ -56,7 +57,7 @@ def context():
   return Context()
 
 
-def create_access_profile(channel_header, channel_index, enable_channel_scan):
+def create_access_profile(channel_header, channel_index, enable_channel_scan, scan_automation_period=CT.compress(0)):
   # create a simple access profile, assuming only one subprofile and one subband for now. By setting enable_channel_scan we are listening continuously on
   # the channel_index
   if enable_channel_scan:
@@ -66,7 +67,7 @@ def create_access_profile(channel_header, channel_index, enable_channel_scan):
 
   return AccessProfile(
     channel_header=channel_header,
-    sub_profiles=[SubProfile(subband_bitmap=subband_bitmap, scan_automation_period=CT(exp=0, mant=0)), SubProfile(), SubProfile(),
+    sub_profiles=[SubProfile(subband_bitmap=subband_bitmap, scan_automation_period=scan_automation_period), SubProfile(), SubProfile(),
                   SubProfile()],
     sub_bands=[SubBand(
       channel_index_start=channel_index,
@@ -77,8 +78,11 @@ def create_access_profile(channel_header, channel_index, enable_channel_scan):
   )
 
 
-def change_access_profile(modem, access_profile):
+def change_access_profile(modem, access_profile, specifier):
   resp = modem.execute_command(Command.create_with_write_file_action_system_file(
-    file=AccessProfileFile(access_profile=access_profile, access_specifier=0)))
+    file=AccessProfileFile(access_profile=access_profile, access_specifier=specifier)))
   assert resp, "Setting Access Profile failed!"
 
+def set_active_access_class(modem, access_class):
+  resp = modem.execute_command(Command.create_with_write_file_action_system_file(DllConfigFile(active_access_class=access_class)))
+  assert resp, "Setting active access class failed!"
