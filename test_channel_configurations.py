@@ -1,22 +1,14 @@
 from time import sleep
 
-import pytest
-
 from pytest_bdd import scenario, given, when, then, parsers
 
-from conftest import change_access_profile
+from conftest import change_access_profile, create_access_profile
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
-from d7a.dll.access_profile import AccessProfile
-from d7a.dll.sub_profile import SubProfile
 from d7a.phy.channel_header import ChannelHeader, ChannelBand, ChannelCoding, ChannelClass
-from d7a.phy.subband import SubBand
 from d7a.sp.configuration import Configuration
 from d7a.sp.qos import ResponseMode, QoS
-from d7a.system_files.access_profile import AccessProfileFile
-from d7a.types.ct import CT
-from modem.modem import Modem
 
 
 @scenario('channel_configurations.feature',
@@ -94,13 +86,15 @@ def channel_configuration(band, channel_class, index):
 
 @given("a testdevice using an access profile based on this channel configuration")
 def change_access_profile_test_device(test_device, channel_configuration):
-  change_access_profile(test_device, channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=False)
+  change_access_profile(test_device,
+                        create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=False))
   sleep(0.2)  # give some time to switch AP
 
 
 @given("a DUT, using an access profile based on this channel configuration and listening for foreground packets")
 def change_access_profile_dut(dut, channel_configuration):
-  change_access_profile(dut, channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=True)
+  change_access_profile(dut,
+                        create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=True))
   dut.clear_unsolicited_responses_received()
   sleep(0.2)  # give some time to switch AP
 

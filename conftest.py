@@ -56,16 +56,15 @@ def context():
   return Context()
 
 
-# TODO move?
-def change_access_profile(modem, channel_header, channel_index, enable_channel_scan):
-  # we assume only one subprofile and one subband for now. By setting enable_channel_scan we are listening continuously on
+def create_access_profile(channel_header, channel_index, enable_channel_scan):
+  # create a simple access profile, assuming only one subprofile and one subband for now. By setting enable_channel_scan we are listening continuously on
   # the channel_index
   if enable_channel_scan:
     subband_bitmap = 0x01
   else:
     subband_bitmap = 0
 
-  access_profile = AccessProfile(
+  return AccessProfile(
     channel_header=channel_header,
     sub_profiles=[SubProfile(subband_bitmap=subband_bitmap, scan_automation_period=CT(exp=0, mant=0)), SubProfile(), SubProfile(),
                   SubProfile()],
@@ -73,10 +72,12 @@ def change_access_profile(modem, channel_header, channel_index, enable_channel_s
       channel_index_start=channel_index,
       channel_index_end=channel_index,
       eirp=10,
-      cca=86  # TODO
+      cca=86
     )]
   )
 
+
+def change_access_profile(modem, access_profile):
   resp = modem.execute_command(Command.create_with_write_file_action_system_file(
     file=AccessProfileFile(access_profile=access_profile, access_specifier=0)))
   assert resp, "Setting Access Profile failed!"
