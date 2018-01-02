@@ -36,7 +36,7 @@ def query_cmd_fail(context):
         operand=QueryOperand(
           type=QueryType.ARITH_COMP_WITH_VALUE,
           mask_present=False,
-          params=ArithQueryParams(comp_type=ArithComparisonType.EQUALITY, signed_data_type=True),
+          params=ArithQueryParams(comp_type=ArithComparisonType.EQUALITY, signed_data_type=False),
           compare_length=Length(8),
           compare_value=[0, 0, 0, 0, 0, 0, 0, 0],
           file_a_offset=Offset(id=0, offset=Length(0))
@@ -91,7 +91,7 @@ def query_cmd_success(test_device, context):
         operand=QueryOperand(
           type=QueryType.ARITH_COMP_WITH_VALUE,
           mask_present=False,
-          params=ArithQueryParams(comp_type=ArithComparisonType.EQUALITY, signed_data_type=True),
+          params=ArithQueryParams(comp_type=ArithComparisonType.EQUALITY, signed_data_type=False),
           compare_length=Length(8),
           compare_value=[ord(b) for b in struct.pack(">Q", int(test_device.uid, 16))],
           file_a_offset=Offset(id=0, offset=Length(0))
@@ -116,3 +116,110 @@ def query_cmd_success(test_device, context):
 def does_return_result(context):
   assert len(context.response) == 1, "expected one response"
   assert len(context.response[0].actions) == 1, "expected a return file action"
+
+
+
+def get_arithm_comp_to_uid_cmd(value, comp_type):
+  # we compare the UID file to value using the comp_type comparator
+  cmd = Command()
+
+  cmd.add_action(
+    RegularAction(
+      operation=BreakQuery(
+        operand=QueryOperand(
+          type=QueryType.ARITH_COMP_WITH_VALUE,
+          mask_present=False,
+          params=ArithQueryParams(comp_type=comp_type, signed_data_type=False),
+          compare_length=Length(8),
+          compare_value=[ord(b) for b in struct.pack(">Q", value)],
+          file_a_offset=Offset(id=0, offset=Length(0))
+        )
+      )
+    )
+  )
+  cmd.add_action(
+    RegularAction(
+      operation=ReadFileData(
+        operand=DataRequest(
+          offset=Offset(id=0, offset=Length(0)),
+          length=Length(8)
+        )
+      )
+    )
+  )
+
+  return cmd
+
+
+@scenario('queries.feature',
+          'The > comparator of a query with arithmetic comparison succeeds with a bigger value')
+def test_comp_bigger_ok():
+  pass
+
+
+@given("a command containing a query with a > comparison with a value bigger than a known value, and a Read action")
+def query_cmd_bigger(context, test_device):
+  # we compare the UID file to UID + 1
+  context.query_cmd = get_arithm_comp_to_uid_cmd(int(test_device.uid, 16) + 1, ArithComparisonType.GREATER_THAN)
+
+
+@scenario('queries.feature',
+          'The > comparator of a query with arithmetic comparison fails with a smaller value')
+def test_comp_bigger_smaller_nok():
+  pass
+
+
+@given("a command containing a query with a > comparison with a smaller bigger than a known value, and a Read action")
+def query_cmd_bigger_smaller_value(context, test_device):
+  # we compare the UID file to UID - 1
+  context.query_cmd = get_arithm_comp_to_uid_cmd(int(test_device.uid, 16) - 1, ArithComparisonType.GREATER_THAN)
+
+
+@scenario('queries.feature',
+          'The > comparator of a query with arithmetic comparison fails with an equal value')
+def test_comp_bigger_equal_nok():
+  pass
+
+
+@given("a command containing a query with a > comparison with an a value equal to a known value, and a Read action")
+def query_cmd_bigger_equal_value(context, test_device):
+  # we compare the UID file to UID
+  context.query_cmd = get_arithm_comp_to_uid_cmd(int(test_device.uid, 16), ArithComparisonType.GREATER_THAN)
+
+
+@scenario('queries.feature',
+          'The >= comparator of a query with arithmetic comparison succeeds with a bigger value')
+def test_comp_bigger_or_equal_ok():
+  pass
+
+
+@given("a command containing a query with a >= comparison with a value bigger than a known value, and a Read action")
+def query_cmd_bigger_or_equal(context, test_device):
+  # we compare the UID file to UID + 1
+  context.query_cmd = get_arithm_comp_to_uid_cmd(int(test_device.uid, 16) + 1, ArithComparisonType.GREATER_THAN_OR_EQUAL_TO)
+
+
+@scenario('queries.feature',
+          'The >= comparator of a query with arithmetic comparison fails with a smaller value')
+def test_comp_bigger_or_equal_smaller_nok():
+  pass
+
+
+@given("a command containing a query with a >= comparison with a value smaller than a known value, and a Read action")
+def query_cmd_bigger_or_equal_smaller_value(context, test_device):
+  # we compare the UID file to UID - 1
+  context.query_cmd = get_arithm_comp_to_uid_cmd(int(test_device.uid, 16) - 1, ArithComparisonType.GREATER_THAN_OR_EQUAL_TO)
+
+
+@scenario('queries.feature',
+          'The >= comparator of a query with arithmetic comparison succeeds with an equal value')
+def test_comp_bigger_or_equal_equal_ok():
+  pass
+
+
+@given("a command containing a query with a >= comparison with an a value equal to a known value, and a Read action")
+def query_cmd_bigger_or_equal_equal_value(context, test_device):
+  # we compare the UID file to UID
+  context.query_cmd = get_arithm_comp_to_uid_cmd(int(test_device.uid, 16), ArithComparisonType.GREATER_THAN_OR_EQUAL_TO)
+
+
