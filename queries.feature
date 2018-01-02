@@ -13,43 +13,29 @@ Scenario: When predicate of Break Query action succeeds all subsequent actions a
     And the Read action does return a result
 
 @wip
-Scenario: The > comparator of a query with arithmetic comparison succeeds with a bigger value
-    Given a command containing a query with a > comparison with a value bigger than a known value, and a Read action
+Scenario: Validate correct execution of queries with arithmetic comparison
+    Given a command containing a query with a <comp_type> comparison with an a value <value_comparison> to a known value, and a Read action
     When the testdevice executes the command
     Then the command executes successfully
-    And the Read action does return a result
+    And the Read action does return <result_count> results
 
-@wip
-Scenario: The > comparator of a query with arithmetic comparison fails with a smaller value
-    Given a command containing a query with a > comparison with a smaller bigger than a known value, and a Read action
-    When the testdevice executes the command
-    Then the command executes successfully
-    And the Read action does not return a result
-
-@wip
-Scenario: The > comparator of a query with arithmetic comparison fails with an equal value
-    Given a command containing a query with a > comparison with an a value equal to a known value, and a Read action
-    When the testdevice executes the command
-    Then the command executes successfully
-    And the Read action does not return a result
-
-@wip
-Scenario: The >= comparator of a query with arithmetic comparison succeeds with a bigger value
-    Given a command containing a query with a >= comparison with a value bigger than a known value, and a Read action
-    When the testdevice executes the command
-    Then the command executes successfully
-    And the Read action does return a result
-
-@wip
-Scenario: The >= comparator of a query with arithmetic comparison fails with a smaller value
-    Given a command containing a query with a >= comparison with a value smaller than a known value, and a Read action
-    When the testdevice executes the command
-    Then the command executes successfully
-    And the Read action does not return a result
-
-@wip
-Scenario: The >= comparator of a query with arithmetic comparison succeeds with an equal value
-    Given a command containing a query with a >= comparison with an a value equal to a known value, and a Read action
-    When the testdevice executes the command
-    Then the command executes successfully
-    And the Read action does return a result
+    Examples: example1
+    | comp_type | value_comparison  | result_count  |
+    | >         | bigger            | 1             |
+    | >         | equal             | 0             |
+    | >         | smaller           | 0             |
+    | >=        | bigger            | 1             |
+    | >=        | equal             | 1             |
+    | >=        | smaller           | 0             |
+    | <         | bigger            | 0             |
+    | <         | equal             | 0             |
+    | <         | smaller           | 1             |
+    | <=        | bigger            | 0             |
+    | <=        | equal             | 1             |
+    | <=        | smaller           | 1             |
+    | ==        | bigger            | 0             |
+    | ==        | equal             | 1             |
+    | ==        | smaller           | 0             |
+    | !=        | bigger            | 1             |
+    | !=        | equal             | 0             |
+    | !=        | smaller           | 1             |
