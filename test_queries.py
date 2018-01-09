@@ -159,7 +159,7 @@ def test_comp_generic(comp_type, value_comparison):
   pass
 
 
-@given("a command containing a query with a <comp_type> comparison with an a value <value_comparison> to a known value, and a Read action")
+@given("a command containing a query with a <comp_type> comparison comparing a known value with a value which is <value_comparison>, and a Read action")
 def query_cmd_generic(context, test_device, comp_type, value_comparison):
   # we compare the UID file to UID, or UID - 1 or UID + 1, depending on value_comparisor
   if comp_type == ">":
