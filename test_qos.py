@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from pytest_bdd import scenario, given, when, then
-from conftest import change_access_profile, create_access_profile
+from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -109,8 +109,7 @@ def requester_session_should_complete_successfully(context):
 
 @then('the responder should receive an unsolicited response')
 def responder_should_receive_packet(responder):
-  while len(responder.get_unsolicited_responses_received()) == 0:  # endless loop, ended by pytest-timeout if needed
-    pass
+  wait_for_unsolicited_response(responder)
 
   assert len(responder.get_unsolicited_responses_received()) == 1, \
     "DUT should have received 1 unsolicited response from test device"

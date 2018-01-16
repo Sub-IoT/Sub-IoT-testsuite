@@ -2,7 +2,8 @@ from time import sleep
 
 from pytest_bdd import scenario, given, when, then
 
-from conftest import change_access_profile, create_access_profile, set_active_access_class
+from conftest import change_access_profile, create_access_profile, set_active_access_class, \
+  wait_for_unsolicited_response
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -66,8 +67,7 @@ def send_command(test_device):
 
 @then("the responder should receive this command")
 def validate_received(dut):
-  while len(dut.get_unsolicited_responses_received()) == 0:  # endless loop, ended by pytest-timeout if needed
-    pass
+  wait_for_unsolicited_response(dut)
 
   assert len(dut.get_unsolicited_responses_received()) == 1, \
     "DUT should have received 1 unsolicited response from test device"

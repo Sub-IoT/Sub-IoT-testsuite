@@ -1,3 +1,4 @@
+
 import pytest
 
 from d7a.alp.command import Command
@@ -9,6 +10,8 @@ from d7a.system_files.access_profile import AccessProfileFile
 from d7a.system_files.dll_config import DllConfigFile
 from d7a.types.ct import CT
 from modem.modem import Modem
+from datetime import datetime
+from time import sleep
 
 
 def pytest_addoption(parser):
@@ -86,3 +89,15 @@ def change_access_profile(modem, access_profile, specifier=0):
 def set_active_access_class(modem, access_class):
   resp = modem.execute_command(Command.create_with_write_file_action_system_file(DllConfigFile(active_access_class=access_class)))
   assert resp, "Setting active access class failed!"
+
+def wait_for_unsolicited_response(modem):
+  start_time = datetime.now()
+  timeout = False
+  while len(modem.get_unsolicited_responses_received()) == 0 and not timeout:
+    if (datetime.now() - start_time).total_seconds() >= 15:
+      timeout = True
+    else:
+      sleep(0.05)
+
+  if timeout:
+    assert False, "Timed out waiting for unsolicited response"

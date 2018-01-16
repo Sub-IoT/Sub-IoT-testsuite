@@ -30,7 +30,6 @@ def test_break_query_fails():
 @given("a command containing a Break Query action, which results in a fail, and a Read action")
 def query_cmd_fail(context):
   cmd = Command()
-
   # we assume comparing the UID file to 0 results in a fail
   cmd.add_action(
     RegularAction(

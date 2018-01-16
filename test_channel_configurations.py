@@ -2,7 +2,7 @@ from time import sleep
 
 from pytest_bdd import scenario, given, when, then, parsers
 
-from conftest import change_access_profile, create_access_profile
+from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -120,8 +120,7 @@ def send_command(test_device):
 
 @then("the responder should receive this command on the expected channel configuration")
 def validate_received(dut, channel_configuration):
-  while len(dut.get_unsolicited_responses_received()) == 0:  # endless loop, ended by pytest-timeout if needed
-    pass
+  wait_for_unsolicited_response(dut)
 
   assert len(dut.get_unsolicited_responses_received()) == 1, \
     "DUT should have received 1 unsolicited response from test device"
