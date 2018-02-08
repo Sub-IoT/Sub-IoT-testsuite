@@ -36,11 +36,15 @@ def serial_dut(request):
 
 @pytest.fixture(scope="session")
 def test_device(serial_test_device):
-    return Modem(serial_test_device, 115200, None)
+    modem = Modem(serial_test_device, 115200, None)
+    modem.connect()
+    return modem
 
 @pytest.fixture(scope="session")
 def dut(serial_dut):
-    return Modem(serial_dut, 115200, None)
+    modem = Modem(serial_dut, 115200, None)
+    modem.connect()
+    return modem
 
 @pytest.fixture(scope="session")
 def default_channel_header():
