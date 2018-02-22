@@ -23,30 +23,24 @@ def access_profile(default_channel_header, default_channel_index):
   return create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True,
                                scan_automation_period=CT.compress(1024))
 
-@given("an access profile with one subband which does not have a scan automation period")
-def access_profile2(default_channel_header, default_channel_index):
-  return create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=False)
 
-
-@given("a testdevice configured with these access profiles, and using access class with the second access profile")
-def change_access_profile_test_device(test_device, access_profile, access_profile2):
+@given("a testdevice using this access profile")
+def change_access_profile_test_device(test_device, access_profile):
   change_access_profile(test_device, access_profile, 0)
-  change_access_profile(test_device, access_profile2, 1)
-  set_active_access_class(test_device, 0x11)
+  set_active_access_class(test_device, 0x01)
   sleep(0.2)  # give some time to switch AP
 
 
 
-@given("a DUT, configured with these access profiles, and with active class referring to the first access profile")
-def change_access_profile_dut(dut, access_profile, access_profile2):
+@given("a DUT, using this access profile")
+def change_access_profile_dut(dut, access_profile):
   change_access_profile(dut, access_profile, 0)
-  change_access_profile(dut, access_profile2, 1)
   set_active_access_class(dut, 0x01)
   dut.clear_unsolicited_responses_received()
   sleep(0.2)  # give some time to switch AP
 
 
-@when("the testdevice executes a command forwarded to the D7ASP interface using the access class referring to the first access profile")
+@when("the testdevice executes a command forwarded to the D7ASP interface using this access class")
 def send_command(test_device):
   interface_configuration = Configuration(
       qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
@@ -71,6 +65,3 @@ def validate_received(dut):
 
   assert len(dut.get_unsolicited_responses_received()) == 1, \
     "DUT should have received 1 unsolicited response from test device"
-
-  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().addressee.access_class == 0x11, \
-    "Requester AC is wrong"
