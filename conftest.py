@@ -17,6 +17,7 @@ from time import sleep
 def pytest_addoption(parser):
   parser.addoption("--serial-test-device", dest="serial_test_device", help="serial port for Test Device", default=None)
   parser.addoption("--serial-dut", dest="serial_dut", help="serial port for Device Under Test", default=None)
+  parser.addoption("--loop", dest="loop", help="loop count", default=1, type=int)
 
 @pytest.fixture(scope="session")
 def serial_test_device(request):
@@ -33,6 +34,10 @@ def serial_dut(request):
       raise Exception("A serial port for the DUT is required")
 
     return dev
+
+@pytest.fixture(scope="session")
+def loop_count(request):
+    return request.config.getoption("--loop")
 
 @pytest.fixture(scope="session")
 def test_device(serial_test_device):
