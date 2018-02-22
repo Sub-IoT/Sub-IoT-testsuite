@@ -7,6 +7,7 @@ from conftest import change_access_profile, create_access_profile, set_active_ac
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
+from d7a.phy.channel_header import ChannelClass, ChannelHeader, ChannelBand, ChannelCoding
 from d7a.sp.configuration import Configuration
 from d7a.sp.qos import ResponseMode, QoS
 from d7a.types.ct import CT
@@ -18,10 +19,27 @@ def test_bg():
   pass
 
 
-@given("an access profile with one subband which has a scan automation period")
-def access_profile(default_channel_header, default_channel_index):
-  return create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True,
-                               scan_automation_period=CT.compress(1024))
+@given("an access profile using <channel_class> channel class <coding> coding with one subband which has a scan automation period of <tsched>")
+def access_profile(channel_class, coding, tsched, default_channel_index):
+  if channel_class == "lo":
+    cl = ChannelClass.LO_RATE
+  elif channel_class == "normal":
+    cl = ChannelClass.NORMAL_RATE
+  elif channel_class == "hi":
+    cl = ChannelClass.HI_RATE
+  else:
+    assert False
+
+  if coding == "PN9":
+    cc = ChannelCoding.PN9
+  elif coding == "FEC":
+    cc = ChannelCoding.FEC_PN9
+  else:
+    assert False
+
+  channel_header = ChannelHeader(channel_band=ChannelBand.BAND_868, channel_coding=cc, channel_class=cl)
+  return create_access_profile(channel_header, default_channel_index, enable_channel_scan=True,
+                               scan_automation_period=CT.compress(int(tsched)))
 
 
 @given("a testdevice using this access profile")
