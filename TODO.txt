@@ -7,5 +7,4 @@
 - D7AActP
 - indirect forward
 - adhoc sync
-- dormant sessions
 - Te
