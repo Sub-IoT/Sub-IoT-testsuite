@@ -1,7 +1,8 @@
 import pytest
 from time import sleep
 from pytest_bdd import scenario, given, when, then
-from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response
+from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
+  set_active_access_class
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -29,6 +30,7 @@ def test_qos_response_mode_Any_with_response():
 def requester(test_device, default_channel_header, default_channel_index):
   change_access_profile(test_device,
                         create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=False))
+  set_active_access_class(test_device, 0x01)
   sleep(0.2)  # give some time to switch AP
   return test_device
 
@@ -37,6 +39,7 @@ def requester(test_device, default_channel_header, default_channel_index):
 def responder(dut, default_channel_header, default_channel_index):
   change_access_profile(dut,
                         create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True))
+  set_active_access_class(dut, 0x01)
   sleep(0.2)  # give some time to switch AP
   dut.clear_unsolicited_responses_received()
   return dut

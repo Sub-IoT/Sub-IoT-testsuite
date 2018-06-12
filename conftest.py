@@ -92,7 +92,9 @@ def create_access_profile(channel_header, channel_index, enable_channel_scan, sc
 
 def change_access_profile(modem, access_profile, specifier=0):
   resp = modem.execute_command(Command.create_with_write_file_action_system_file(
-    file=AccessProfileFile(access_profile=access_profile, access_specifier=specifier)))
+    file=AccessProfileFile(access_profile=access_profile, access_specifier=specifier)),
+    timeout_seconds=20
+  )
   assert resp, "Setting Access Profile failed!"
 
 def set_active_access_class(modem, access_class):

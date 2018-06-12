@@ -38,7 +38,7 @@ def requester(test_device, default_channel_header, default_channel_index):
                         create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
                         specifier=1)
   set_active_access_class(test_device, 0x01)
-  sleep(0.2)  # give some time to switch AP
+  sleep(0.5)  # give some time to switch AP
   test_device.clear_unsolicited_responses_received()
   return test_device
 
@@ -65,7 +65,7 @@ def responder(dut, default_channel_header, default_channel_index):
                         create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
                         specifier=1)
   set_active_access_class(dut, 0x11)
-  sleep(0.2)  # give some time to switch AP
+  sleep(0.5)  # give some time to switch AP
   dut.clear_unsolicited_responses_received()
   return dut
 

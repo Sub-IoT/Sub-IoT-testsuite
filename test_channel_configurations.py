@@ -2,7 +2,8 @@ from time import sleep
 
 from pytest_bdd import scenario, given, when, then, parsers
 
-from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response
+from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
+  set_active_access_class
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -88,15 +89,17 @@ def channel_configuration(band, channel_class, index):
 def change_access_profile_test_device(test_device, channel_configuration):
   change_access_profile(test_device,
                         create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=False))
-  sleep(0.2)  # give some time to switch AP
+  set_active_access_class(test_device, 0x01)
+  sleep(1)  # give some time to switch AP
 
 
 @given("a DUT, using an access profile based on this channel configuration and listening for foreground packets")
 def change_access_profile_dut(dut, channel_configuration):
   change_access_profile(dut,
                         create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=True))
+  set_active_access_class(dut, 0x01)
   dut.clear_unsolicited_responses_received()
-  sleep(0.2)  # give some time to switch AP
+  sleep(1)  # give some time to switch AP
 
 
 @when("the testdevice executes a command forwarded to the D7ASP interface using this access profile")
