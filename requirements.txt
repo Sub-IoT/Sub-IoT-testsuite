@@ -1,3 +1,3 @@
 pytest
 pytest-timeout
-pytest-bdd
+pytest-bdd==2.19.0
