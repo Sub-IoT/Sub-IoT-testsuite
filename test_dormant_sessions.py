@@ -41,22 +41,22 @@ def get_channel_class(channel_class_string):
     assert False
 
 @given("an access profile using <channel_class> which does not scan")
-def ap1(channel_class, default_channel_header, default_channel_index):
+def ap_not_scanning(channel_class, default_channel_header, default_channel_index):
   channel_header = default_channel_header
   channel_header.channel_class = get_channel_class(channel_class)
   return create_access_profile(channel_header, default_channel_index, enable_channel_scan=False)
 
 @given("an access profile using <channel_class> which does scan continuously")
-def ap2(channel_class, default_channel_header, default_channel_index):
+def ap_scanning(channel_class, default_channel_header, default_channel_index):
   channel_header = default_channel_header
   channel_header.channel_class = get_channel_class(channel_class)
   return create_access_profile(channel_header, default_channel_index, enable_channel_scan=True)
 
 
-@given("a requester, using the first AP")
-def requester(test_device, ap1, ap2):
-  change_access_profile(test_device, ap1, specifier=0)
-  change_access_profile(test_device, ap2, specifier=1)
+@given("a requester, which does not scan")
+def requester(test_device, ap_not_scanning, ap_scanning):
+  change_access_profile(test_device, ap_not_scanning, specifier=0)
+  change_access_profile(test_device, ap_scanning, specifier=1)
   set_active_access_class(test_device, 0x01)
   sleep(0.5)  # give some time to switch AP
   test_device.clear_unsolicited_responses_received()
@@ -64,22 +64,18 @@ def requester(test_device, ap1, ap2):
 
 
 @given("a requester, which scans continuously")
-def requester_scanning(test_device, default_channel_header, default_channel_index):
-  change_access_profile(test_device,
-                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
-                        specifier=0)
-  change_access_profile(test_device,
-                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
-                        specifier=1)
+def requester_scanning(test_device, ap_not_scanning, ap_scanning):
+  change_access_profile(test_device, ap_scanning, specifier=0)
+  change_access_profile(test_device, ap_scanning, specifier=1)
   set_active_access_class(test_device, 0x01)
-  sleep(0.2)  # give some time to switch AP
+  sleep(0.5)  # give some time to switch AP
   test_device.clear_unsolicited_responses_received()
   return test_device
 
-@given("a responder, using the second AP")
-def responder(dut, ap1, ap2):
-  change_access_profile(dut, ap1, specifier=0)
-  change_access_profile(dut, ap2, specifier=1)
+@given("a responder, which scans continuously")
+def responder(dut, ap_not_scanning, ap_scanning):
+  change_access_profile(dut, ap_not_scanning, specifier=0)
+  change_access_profile(dut, ap_scanning, specifier=1)
   set_active_access_class(dut, 0x11)
   sleep(0.5)  # give some time to switch AP
   dut.clear_unsolicited_responses_received()
