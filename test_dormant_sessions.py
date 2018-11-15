@@ -6,6 +6,7 @@ from conftest import change_access_profile, create_access_profile, wait_for_unso
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
+from d7a.phy.channel_header import ChannelClass
 from d7a.sp.configuration import Configuration
 from d7a.sp.qos import ResponseMode, QoS
 from d7a.system_files.uid import UidFile
@@ -29,14 +30,33 @@ def test_dormant_timeout_with_response():
 def test_dormant_timeout_without_response():
   pass
 
-@given("a requester, which does not scan")
-def requester(test_device, default_channel_header, default_channel_index):
-  change_access_profile(test_device,
-                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=False),
-                        specifier=0)
-  change_access_profile(test_device,
-                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
-                        specifier=1)
+def get_channel_class(channel_class_string):
+  if channel_class_string == "lo":
+    return ChannelClass.LO_RATE
+  elif channel_class_string == "normal":
+    return ChannelClass.NORMAL_RATE
+  elif channel_class_string == "hi":
+    return ChannelClass.HI_RATE
+  else:
+    assert False
+
+@given("an access profile using <channel_class> which does not scan")
+def ap1(channel_class, default_channel_header, default_channel_index):
+  channel_header = default_channel_header
+  channel_header.channel_class = get_channel_class(channel_class)
+  return create_access_profile(channel_header, default_channel_index, enable_channel_scan=False)
+
+@given("an access profile using <channel_class> which does scan continuously")
+def ap2(channel_class, default_channel_header, default_channel_index):
+  channel_header = default_channel_header
+  channel_header.channel_class = get_channel_class(channel_class)
+  return create_access_profile(channel_header, default_channel_index, enable_channel_scan=True)
+
+
+@given("a requester, using the first AP")
+def requester(test_device, ap1, ap2):
+  change_access_profile(test_device, ap1, specifier=0)
+  change_access_profile(test_device, ap2, specifier=1)
   set_active_access_class(test_device, 0x01)
   sleep(0.5)  # give some time to switch AP
   test_device.clear_unsolicited_responses_received()
@@ -56,14 +76,10 @@ def requester_scanning(test_device, default_channel_header, default_channel_inde
   test_device.clear_unsolicited_responses_received()
   return test_device
 
-@given("a responder, continuously listening for foreground packets")
-def responder(dut, default_channel_header, default_channel_index):
-  change_access_profile(dut,
-                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=False),
-                        specifier=0)
-  change_access_profile(dut,
-                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
-                        specifier=1)
+@given("a responder, using the second AP")
+def responder(dut, ap1, ap2):
+  change_access_profile(dut, ap1, specifier=0)
+  change_access_profile(dut, ap2, specifier=1)
   set_active_access_class(dut, 0x11)
   sleep(0.5)  # give some time to switch AP
   dut.clear_unsolicited_responses_received()
@@ -71,7 +87,7 @@ def responder(dut, default_channel_header, default_channel_index):
 
 @given("a dormant session registered at the responder for the UID of the requester")
 def dormant_session(test_device, responder, context):
-  context.timeout_ticks = 10000
+  context.timeout_seconds = 10
   interface_config = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_ANY),
     addressee=Addressee(
@@ -79,7 +95,7 @@ def dormant_session(test_device, responder, context):
       id_type=IdType.UID,
       id=int(test_device.uid, 16)
     ),
-    dorm_to=CT.compress(context.timeout_ticks)
+    dorm_to=CT.compress(context.timeout_seconds)
   )
 
   context.dormant_request = Command.create_with_return_file_data_action(
@@ -136,7 +152,7 @@ def send_unicast(requester, dut, context):
 @when("waiting for the dormant session to time out")
 def waiting_for_dormant_timeout(context, responder):
   assert len(responder.get_unsolicited_responses_received()) == 0
-  sleep(context.timeout_ticks * 1.2 / 1024) # make sure we sleep long enough
+  sleep(context.timeout_seconds * 1.2) # make sure we sleep long enough
 
 @then("the requester's session should complete successfully")
 def requester_session_should_complete_successfully(context):
