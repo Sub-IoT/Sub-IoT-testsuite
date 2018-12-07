@@ -19,6 +19,15 @@ from d7a.types.ct import CT
 def test_bg():
   pass
 
+@scenario('access_classes.feature',
+          'Node performing background scan is accessible, using UID')
+def test_bg_uid():
+  pass
+
+@scenario('access_classes.feature',
+          'Node performing background scan is not accessible, when using wrong UID')
+def test_bg_wrong_uid():
+  pass
 
 @given("an access profile using <channel_class> channel class <coding> coding with one subband which has a scan automation period of <tsched>")
 def access_profile(channel_class, coding, tsched, default_channel_index):
@@ -83,7 +92,64 @@ def send_command(test_device, context, loop_count):
       if resp.execution_completed and not resp.completed_with_error:
           context.succeeded = context.succeeded + 1
 
+
+@when("the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class for a specific UID")
+def send_command_uid(test_device, context, loop_count, dut):
+  interface_configuration = Configuration(
+      qos=QoS(resp_mod=ResponseMode.RESP_MODE_ALL),
+      addressee=Addressee(
+        access_class=0x01,
+        id_type=IdType.UID,
+        id=int(dut.uid, 16)
+      )
+    )
+
+  command = Command.create_with_read_file_action_system_file(
+    file=UidFile(),
+    interface_type=InterfaceType.D7ASP,
+    interface_configuration=interface_configuration
+  )
+
+  context.succeeded = 0
+  for i in range(loop_count):
+    responses = test_device.execute_command(command, timeout_seconds=10)
+    for resp in responses:
+      if resp.execution_completed and not resp.completed_with_error:
+          context.succeeded = context.succeeded + 1
+
+
+@when("the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class for a specific (wrong) UID")
+def send_command_uid(test_device, context, loop_count, dut):
+  interface_configuration = Configuration(
+      qos=QoS(resp_mod=ResponseMode.RESP_MODE_ALL),
+      addressee=Addressee(
+        access_class=0x01,
+        id_type=IdType.UID,
+        id=123 # wrong!
+      )
+    )
+
+  command = Command.create_with_read_file_action_system_file(
+    file=UidFile(),
+    interface_type=InterfaceType.D7ASP,
+    interface_configuration=interface_configuration
+  )
+
+  context.succeeded = 0
+  for i in range(loop_count):
+    responses = test_device.execute_command(command, timeout_seconds=10)
+    for resp in responses:
+      if resp.execution_completed and not resp.completed_with_error:
+          context.succeeded = context.succeeded + 1
+
+
 @then("the requester should receive the responses")
 def validate_received(context, loop_count):
   assert context.succeeded == loop_count, \
     "the requester should received the responses"
+
+
+@then("the requester should not receive the responses")
+def validate_received(context, loop_count):
+  assert context.succeeded == 0, \
+    "the requester should not have received the responses"
