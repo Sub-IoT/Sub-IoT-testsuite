@@ -54,12 +54,12 @@ def dut(serial_dut):
 @pytest.fixture(scope="session")
 def default_channel_header():
   return ChannelHeader(channel_band=ChannelBand.BAND_868,
-                               channel_coding=ChannelCoding.PN9,
-                               channel_class=ChannelClass.NORMAL_RATE)
+                               channel_coding=ChannelCoding.FEC_PN9,
+                               channel_class=ChannelClass.LO_RATE)
 
 @pytest.fixture(scope="session")
 def default_channel_index():
-  return 16
+  return 0
 
 @pytest.fixture
 def context():
