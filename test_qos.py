@@ -88,31 +88,43 @@ def command_with_resp(context):
 
 
 @when('the requester starts a session for this command')
-def push_unsolicited(requester, context):
-  print context.request
-  context.response = requester.execute_command(context.request, timeout_seconds=10)
-  # we cannot use return value from when step as fixture apparently, so use context object
+def push_unsolicited(requester, context, loop_count):
+  context.responses = []
+  for i in range(loop_count):
+    print context.request
+    context.responses.append(requester.execute_command(context.request, timeout_seconds=20))
+    # we cannot use return value from when step as fixture apparently, so use context object
 
 
 @then("the requester should not receive a response")
-def requester_should_not_receive_a_response(context):
-  assert len(context.response) == 1, "Requester should not have received a response (besides the tag-response)"
+def requester_should_not_receive_a_response(context, loop_count):
+  assert len(context.responses) == loop_count
+  for i in range(loop_count):
+    assert len(context.responses[i]) == 1, "Requester should not have received a response (besides the tag-response)"
 
 
 @then("the requester should receive a response")
-def requester_should_receive_a_response(context):
-  assert len(context.response) == 2, "Requester should have received a response (besides the tag-response)"
+def requester_should_receive_a_response(context, loop_count):
+  assert len(context.responses) == loop_count
+  for i in range(loop_count):
+    assert len(context.responses[i]) == 2, "Requester should have received a response (besides the tag-response)"
 
 @then("the requester's session should complete successfully")
-def requester_session_should_complete_successfully(context):
-  # the tag response command is the last one
-  assert context.response[len(context.response) - 1].execution_completed, "Execution not completed"
-  assert not context.response[len(context.response) - 1].completed_with_error, "Completed with error"
+def requester_session_should_complete_successfully(context, loop_count):
+  assert len(context.responses) == loop_count
+  for i in range(loop_count):
+    resp = context.responses[i]
+    # the tag response command is the last one
+    assert resp[len(resp) - 1].execution_completed, "Execution not completed"
+    assert not resp[len(resp) - 1].completed_with_error, "Completed with error"
 
 
 @then('the responder should receive an unsolicited response')
-def responder_should_receive_packet(responder):
-  wait_for_unsolicited_response(responder)
+def responder_should_receive_packet(responder, loop_count):
+  if loop_count == 1:
+    wait_for_unsolicited_response(responder)
+  else:
+    sleep(0.1 * loop_count)
 
-  assert len(responder.get_unsolicited_responses_received()) == 1, \
+  assert len(responder.get_unsolicited_responses_received()) == loop_count, \
     "DUT should have received 1 unsolicited response from test device"
