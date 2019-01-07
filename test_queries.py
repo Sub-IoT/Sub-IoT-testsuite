@@ -50,7 +50,7 @@ def query_cmd_fail(context):
       operation=ReadFileData(
         operand=DataRequest(
           offset=Offset(id=0, offset=Length(0)),
-          length=Length(8)
+          length=8
         )
       )
     )
@@ -105,7 +105,7 @@ def query_cmd_success(test_device, context):
       operation=ReadFileData(
         operand=DataRequest(
           offset=Offset(id=0, offset=Length(0)),
-          length=Length(8)
+          length=8
         )
       )
     )
@@ -142,7 +142,7 @@ def get_arithm_comp_to_uid_cmd(value, comp_type):
       operation=ReadFileData(
         operand=DataRequest(
           offset=Offset(id=0, offset=Length(0)),
-          length=Length(8)
+          length=8
         )
       )
     )
