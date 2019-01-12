@@ -1,5 +1,11 @@
 Feature: Filesystem
 
+Scenario: Creating a user file
+    Given a serial modem
+    When creating a user file
+    Then the new file should be accessible
+    And the new file header should be as expected
+
 Scenario: System file is defined, having the correct header and the file data be parsed
     Given a serial modem
     When reading system file <system_file> header and data

@@ -1,11 +1,54 @@
 import pytest
 from pytest_bdd import scenario, given, when, then
 from d7a.alp.command import Command
+from d7a.alp.regular_action import RegularAction
+from d7a.fs.file_header import FileHeader
 from d7a.fs.file_permissions import FilePermissions
-from d7a.fs.file_properties import StorageClass
+from d7a.fs.file_properties import StorageClass, ActionCondition, FileProperties
 from d7a.system_files.system_files import SystemFiles
 from d7a.system_files.system_file_ids import SystemFileIds
 
+
+@scenario('filesystem.feature', 'Creating a user file')
+def test_filesystem_create_user_file():
+  pass
+
+@when('creating a user file')
+def create_userfile(serial_modem, context):
+  context.file_header = FileHeader(
+    permissions=FilePermissions(
+      executeable=True,
+      encrypted=False,
+      user_readable=True,
+      user_writeable=True,
+      user_executeable=False,
+      guest_readable=True,
+      guest_executeable=False,
+      guest_writeable=False
+    ),
+    properties=FileProperties(act_enabled=False, act_condition=ActionCondition.WRITE,
+                              storage_class=StorageClass.PERMANENT),
+    alp_command_file_id=0x41,
+    interface_file_id=0x42,
+    file_size=1,
+    allocated_size=1
+  )
+
+  serial_modem.execute_command(Command.create_with_create_new_file(file_id=0x40, file_header=context.file_header))
+
+@then('the new file should be accessible')
+def user_file_accessible(serial_modem):
+  resp = serial_modem.execute_command(Command.create_with_read_file_action(file_id=0x40, length=1))
+  assert(len(resp[0].actions) == 1)
+  assert(type(resp[0].actions[0]) == RegularAction)
+  assert(resp[0].actions[0].operand.offset.id ==0x40)
+
+@then('the new file header should be as expected')
+def user_file_header_correct(serial_modem, context):
+  resp = serial_modem.execute_command(Command.create_with_read_file_header(file_id=0x40))
+  assert(len(resp[0].actions) == 1)
+  header = resp[0].actions[0].operand.file_header
+  assert (header == context.file_header)
 
 @scenario('filesystem.feature', 'System file is defined, having the correct header and the file data be parsed')
 def test_filesystem_systemfiles():
@@ -14,7 +57,6 @@ def test_filesystem_systemfiles():
 @given("a serial modem")
 def serial_modem(test_device):
   return test_device
-
 
 @when('reading system file <system_file> header and data')
 def read_system_file(serial_modem, system_file, context):
