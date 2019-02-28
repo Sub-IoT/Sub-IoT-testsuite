@@ -105,7 +105,7 @@ def wait_for_unsolicited_response(modem):
   start_time = datetime.now()
   timeout = False
   while len(modem.get_unsolicited_responses_received()) == 0 and not timeout:
-    if (datetime.now() - start_time).total_seconds() >= 30:
+    if (datetime.now() - start_time).total_seconds() >= 60:
       timeout = True
     else:
       sleep(0.05)
