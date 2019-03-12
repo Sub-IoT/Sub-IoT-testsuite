@@ -53,6 +53,7 @@ Scenario: Communication using 433, normal rate class, channel index 0
     When the testdevice executes a command forwarded to the D7ASP interface using this access profile
     Then the responder should receive this command on the expected channel configuration
 
+@band915
 Scenario: Communication using 915, normal rate class, channel index 0
     Given a channel configuration using 915 band, normal rate class and channel index 0
     And a testdevice using an access profile based on this channel configuration
