@@ -128,8 +128,8 @@ def validate_received(dut, channel_configuration):
   assert len(dut.get_unsolicited_responses_received()) == 1, \
     "DUT should have received 1 unsolicited response from test device"
 
-  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_header == channel_configuration['channel_header'], \
+  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_id.channel_header == channel_configuration['channel_header'], \
      "Received using unexpected channel header"
 
-  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_index == channel_configuration['channel_index'], \
+  assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_id.channel_index == channel_configuration['channel_index'], \
      "Received using unexpected channel index"
