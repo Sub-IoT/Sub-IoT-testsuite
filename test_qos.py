@@ -107,7 +107,7 @@ def requester_should_not_receive_a_response(context, loop_count):
 def requester_should_receive_a_response(context, loop_count):
   assert len(context.responses) == loop_count
   for i in range(loop_count):
-    assert len(context.responses[i]) == 2, "Requester should have received a response (besides the tag-response)"
+    assert len(context.responses[i]) >= 2, "Requester should have received a response (besides the tag-response)"
 
 @then("the requester's session should complete successfully")
 def requester_session_should_complete_successfully(context, loop_count):
