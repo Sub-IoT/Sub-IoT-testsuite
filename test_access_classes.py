@@ -56,7 +56,7 @@ def access_profile(channel_class, coding, tsched, default_channel_index):
 def change_access_profile_test_device(test_device, access_profile):
   change_access_profile(test_device, access_profile, 0)
   set_active_access_class(test_device, 0x01)
-  sleep(0.2)  # give some time to switch AP
+  sleep(2)  # give some time to switch AP
 
 
 
@@ -65,7 +65,7 @@ def change_access_profile_dut(dut, access_profile):
   change_access_profile(dut, access_profile, 0)
   set_active_access_class(dut, 0x01)
   dut.clear_unsolicited_responses_received()
-  sleep(0.2)  # give some time to switch AP
+  sleep(2)  # give some time to switch AP
 
 
 @when("the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class")

@@ -90,7 +90,7 @@ def change_access_profile_test_device(test_device, channel_configuration):
   change_access_profile(test_device,
                         create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=False))
   set_active_access_class(test_device, 0x01)
-  sleep(1)  # give some time to switch AP
+  sleep(2)  # give some time to switch AP
 
 
 @given("a DUT, using an access profile based on this channel configuration and listening for foreground packets")
@@ -99,7 +99,7 @@ def change_access_profile_dut(dut, channel_configuration):
                         create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=True))
   set_active_access_class(dut, 0x01)
   dut.clear_unsolicited_responses_received()
-  sleep(1)  # give some time to switch AP
+  sleep(2)  # give some time to switch AP
 
 
 @when("the testdevice executes a command forwarded to the D7ASP interface using this access profile")
