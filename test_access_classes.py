@@ -88,6 +88,7 @@ def send_command(test_device, context, loop_count):
   context.succeeded = 0
   for i in range(loop_count):
     responses = test_device.execute_command(command, timeout_seconds=10)
+    sleep(1)
     for resp in responses:
       if resp.execution_completed and not resp.completed_with_error:
           context.succeeded = context.succeeded + 1
@@ -113,6 +114,7 @@ def send_command_uid(test_device, context, loop_count, dut):
   context.succeeded = 0
   for i in range(loop_count):
     responses = test_device.execute_command(command, timeout_seconds=10)
+    sleep(2)
     for resp in responses:
       if resp.execution_completed and not resp.completed_with_error:
           context.succeeded = context.succeeded + 1
@@ -138,6 +140,7 @@ def send_command_uid(test_device, context, loop_count, dut):
   context.succeeded = 0
   for i in range(loop_count):
     responses = test_device.execute_command(command, timeout_seconds=10)
+    sleep(1)
     for resp in responses:
       if resp.execution_completed and not resp.completed_with_error:
           context.succeeded = context.succeeded + 1
