@@ -7,7 +7,7 @@ Scenario: Communication using 868, normal rate class, channel index 0
     When the testdevice executes a command forwarded to the D7ASP interface using this access profile
     Then the responder should receive this command on the expected channel configuration
 
-@known_issue
+@tester
 Scenario: Communication using 868, normal rate class, channel index 270
     Given a channel configuration using 868 band, normal rate class and channel index 270
     And a testdevice using an access profile based on this channel configuration
