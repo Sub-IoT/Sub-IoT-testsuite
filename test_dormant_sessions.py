@@ -201,7 +201,7 @@ def requester_should_receive_dormant_session(requester):
 
 @then('the requester should not receive the dormant session')
 def requester_should_not_receive_dormant_session(requester):
-  sleep(15)
+  sleep(5)
 
   assert len(requester.get_unsolicited_responses_received()) == 0, \
     "requester should have received no dormant session from responder"

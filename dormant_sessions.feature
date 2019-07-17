@@ -1,5 +1,6 @@
 Feature: Dormant session
 
+
 Scenario: Dormant session succeeds for a requester which does unicast requests
     Given an access profile using <channel_class> which does not scan
     And an access profile using <channel_class> which does scan continuously
@@ -18,7 +19,6 @@ Examples: example1
 #    | normal        |
 #    | hi            |
 
-@known_issue
 Scenario: Dormant session fails for a requester which does broadcast requests
     Given an access profile using <channel_class> which does not scan
     And an access profile using <channel_class> which does scan continuously
