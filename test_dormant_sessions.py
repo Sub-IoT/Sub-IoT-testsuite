@@ -78,6 +78,7 @@ def ap_scanning(channel_class, default_channel_header, default_channel_index):
 
 @given("a requester, which does not scan")
 def requester(test_device, ap_not_scanning, ap_scanning):
+  sleep(2)
   change_access_profile(test_device, ap_not_scanning, specifier=0)
   change_access_profile(test_device, ap_scanning, specifier=1)
   set_active_access_class(test_device, 0x01)
@@ -106,7 +107,7 @@ def responder(dut, ap_not_scanning, ap_scanning):
 
 @given("a dormant session registered at the responder for the UID of the requester")
 def dormant_session(test_device, responder, context):
-  context.timeout_seconds = 10
+  context.timeout_seconds = 18
   interface_config = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_ANY),
     addressee=Addressee(
@@ -146,7 +147,7 @@ def send_unicast(requester, dut, context):
     interface_configuration=interface_config
   )
 
-  context.requester_response = requester.execute_command(request, timeout_seconds=10)
+  context.requester_response = requester.execute_command(request, timeout_seconds=20)
 
 @when("the requester starts a broadcast session to the responder")
 def send_unicast(requester, dut, context):
@@ -165,7 +166,7 @@ def send_unicast(requester, dut, context):
     interface_configuration=interface_config
   )
 
-  context.requester_response = requester.execute_command(request, timeout_seconds=10)
+  context.requester_response = requester.execute_command(request, timeout_seconds=20)
 
 
 @when("waiting for the dormant session to time out")
