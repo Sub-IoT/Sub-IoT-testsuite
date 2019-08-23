@@ -108,7 +108,7 @@ def create_access_profile(channel_header, channel_index, enable_channel_scan, sc
       channel_index_start=channel_index,
       channel_index_end=channel_index,
       eirp=10,
-      cca=86
+      cca=80
     )] * 8
   )
 
