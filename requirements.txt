@@ -4,4 +4,4 @@ pytest-bdd==2.19.0
 py==1.5.2
 pluggy==0.6.0
 pytest-spec==0.2.24
-attrs=19.1.0
+attrs==19.1.0
