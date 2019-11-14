@@ -66,6 +66,11 @@ def test_alp_break_query_fail():
     pass
 
 
+@scenario("alp.feature", "Node performing continuous scan will receive message encoded message larger than 255 bytes")
+def test_large_packets():
+    pass
+
+
 @given("a default access class")
 def create_default_access_class(context, default_channel_header, default_channel_index):
     context.default_access_profile = create_access_profile(default_channel_header, default_channel_index,
@@ -281,6 +286,15 @@ def break_query_command(context):
                 )
             )
         )
+    )
+
+@given("a command, with FEC encoding longer than 255 bytes")
+def long_command(context):
+    context.request = Command.create_with_return_file_data_action(
+        file_id=0x48,
+        data=range(150),
+        interface_type=context.interface_conf_def.interface_id,
+        interface_configuration=context.interface_conf_def.interface_configuration
     )
 
 
