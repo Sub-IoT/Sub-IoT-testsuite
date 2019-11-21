@@ -9,7 +9,6 @@ Scenario: Using QoS with response mode No
     Then the responder should receive an unsolicited response
     And the requester should not receive a response
     And the requester's session should complete successfully
-    And there should be no reboots
 
 #Scenario: Using QoS with response mode No with response data
 #    Given a requester
@@ -17,7 +16,6 @@ Scenario: Using QoS with response mode No
 #    And an interface configuration with QoS response mode is no
 #    And a command, forwarded to this interface, which does require response data
 #    When the requester starts a session for this command
-#    And there should be no reboots
 # TODO this should return an error and the packet should not be transmitted. Stack currently asserts on this
 
 
@@ -30,7 +28,6 @@ Scenario: Using QoS with response mode Any without response data
     Then the responder should receive an unsolicited response
     And the requester should receive a response
     And the requester's session should complete successfully
-    And there should be no reboots
 
 
 Scenario: Using QoS with response mode Any with response data
@@ -41,4 +38,3 @@ Scenario: Using QoS with response mode Any with response data
     When the requester starts a session for this command
     Then the requester should receive a response
     And the requester's session should complete successfully
-    And there should be no reboots

@@ -12,7 +12,6 @@ Scenario: Dormant session succeeds for a requester which does unicast requests
     And the responder should receive an unsolicited response
     And the requester should receive the dormant session
     And the responders's dormant session should complete successfully
-    And there should be no reboots
 
 Examples: example1
     | channel_class |
@@ -30,7 +29,6 @@ Scenario: Dormant session fails for a requester which does broadcast requests
     Then the requester's session should complete successfully
     And the responder should receive an unsolicited response
     And the requester should not receive the dormant session
-    And there should be no reboots
     # TODO And the responders's dormant session should not complete successfully
 
 Examples: example1
@@ -47,7 +45,6 @@ Scenario: Dormant session times out as expected and fails when no response
     And a dormant session registered at the responder for the UID of the requester
     When waiting for the dormant session to time out
     Then the responders's dormant session should not complete successfully
-    And there should be no reboots
 
 Examples: example1
     | channel_class |
@@ -63,7 +60,6 @@ Scenario: Dormant session times out as expected and succeeds on response
     And a dormant session registered at the responder for the UID of the requester
     When waiting for the dormant session to time out
     Then the responders's dormant session should complete successfully
-    And there should be no reboots
 
 Examples: example1
     | channel_class |

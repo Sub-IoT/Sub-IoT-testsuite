@@ -92,6 +92,15 @@ def context():
 
   return Context()
 
+@pytest.fixture(autouse=True)
+def reset_before_check_after(test_device, dut):
+  reset_board(test_device)
+  reset_board(dut)
+
+  yield
+
+  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
+  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"
 
 def reset_board(modem):
   modem.clear_rebooted_received()

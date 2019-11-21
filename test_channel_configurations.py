@@ -26,7 +26,7 @@ from time import sleep
 from pytest_bdd import scenario, given, when, then, parsers
 
 from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
-  set_active_access_class, reset_board
+  set_active_access_class
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -110,7 +110,6 @@ def channel_configuration(band, channel_class, index):
 
 @given("a testdevice using an access profile based on this channel configuration")
 def change_access_profile_test_device(test_device, channel_configuration):
-  reset_board(test_device)
   change_access_profile(test_device,
                         create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=False))
   set_active_access_class(test_device, 0x01)
@@ -119,7 +118,6 @@ def change_access_profile_test_device(test_device, channel_configuration):
 
 @given("a DUT, using an access profile based on this channel configuration and listening for foreground packets")
 def change_access_profile_dut(dut, channel_configuration):
-  reset_board(dut)
   change_access_profile(dut,
                         create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=True))
   set_active_access_class(dut, 0x01)
@@ -158,8 +156,3 @@ def validate_received(dut, channel_configuration):
 
   assert dut.get_unsolicited_responses_received()[0].get_d7asp_interface_status().channel_id.channel_index == channel_configuration['channel_index'], \
      "Received using unexpected channel index"
-
-@then("there should be no reboots")
-def check_reboots(dut, test_device):
-  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
-  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"

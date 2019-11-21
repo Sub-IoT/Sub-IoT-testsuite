@@ -25,7 +25,7 @@ import pytest
 from time import sleep
 from pytest_bdd import scenario, given, when, then
 from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
-  set_active_access_class, reset_board
+  set_active_access_class
 from d7a.alp.command import Command
 from d7a.alp.regular_action import RegularAction
 from d7a.fs.file_header import FileHeader
@@ -89,7 +89,6 @@ def create_different_access_class(context, default_channel_header, default_chann
 
 @given("a requester, set to default access class")
 def requester_default(test_device, context):
-    reset_board(test_device)
     change_access_profile(test_device,
                           context.default_access_profile,
                           1)
@@ -105,7 +104,6 @@ def requester_create_different_access_class(test_device, context):
 
 @given("a responder, listening for foreground packets on this access class")
 def responder_new(dut, context):
-    reset_board(dut)
     change_access_profile(dut,
                           context.access_profile_scan,
                           2)
@@ -117,7 +115,6 @@ def responder_new(dut, context):
 
 @given("a responder, listening for foreground packets on the default access class")
 def responder_default(dut, context):
-    reset_board(dut)
     change_access_profile(dut,
                           context.default_access_profile_scan,
                           1)
@@ -333,9 +330,4 @@ def responder_should_not_receive_packet(dut, loop_count):
 
     assert len(dut.get_unsolicited_responses_received()) == 0, \
         "Responder should not have received an unsolicited response"
-
-@then("there should be no reboots")
-def check_reboots(dut, test_device):
-  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
-  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"
 
