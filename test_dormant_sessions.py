@@ -25,7 +25,7 @@ import pytest
 from time import sleep
 from pytest_bdd import scenario, given, when, then
 from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
-  set_active_access_class
+  set_active_access_class, reset_board
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -78,6 +78,7 @@ def ap_scanning(channel_class, default_channel_header, default_channel_index):
 
 @given("a requester, which does not scan")
 def requester(test_device, ap_not_scanning, ap_scanning):
+  reset_board(test_device)
   sleep(2)
   change_access_profile(test_device, ap_not_scanning, specifier=0)
   change_access_profile(test_device, ap_scanning, specifier=1)
@@ -89,6 +90,7 @@ def requester(test_device, ap_not_scanning, ap_scanning):
 
 @given("a requester, which scans continuously")
 def requester_scanning(test_device, ap_not_scanning, ap_scanning):
+  reset_board(test_device)
   change_access_profile(test_device, ap_scanning, specifier=0)
   change_access_profile(test_device, ap_scanning, specifier=1)
   set_active_access_class(test_device, 0x01)
@@ -98,6 +100,7 @@ def requester_scanning(test_device, ap_not_scanning, ap_scanning):
 
 @given("a responder, which scans continuously")
 def responder(dut, ap_not_scanning, ap_scanning):
+  reset_board(dut)
   change_access_profile(dut, ap_not_scanning, specifier=0)
   change_access_profile(dut, ap_scanning, specifier=1)
   set_active_access_class(dut, 0x11)
@@ -228,4 +231,9 @@ def dormant_session_should_not_complete(context, responder):
         session_completed = True
 
     sleep(0.1)
+
+@then("there should be no reboots")
+def check_reboots(dut, test_device):
+  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
+  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"
 

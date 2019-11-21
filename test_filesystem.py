@@ -126,3 +126,8 @@ def check_prop(context, system_file):
   assert (header.interface_file_id == 0xFF)
   assert(header.properties.act_enabled == False)
   assert(header.properties.storage_class == StorageClass.PERMANENT)
+
+@then("there should be no reboots")
+def check_reboots(dut, test_device):
+  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
+  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"

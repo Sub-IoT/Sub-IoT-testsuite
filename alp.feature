@@ -13,6 +13,7 @@ Scenario: Using alp to return data using indirect forward
     When the requester starts a session for this command
     Then the responder should receive an unsolicited response
     And the requester should not receive a response
+    And there should be no reboots
 
 @alp
 Scenario: Using alp to return data using direct forward
@@ -26,6 +27,7 @@ Scenario: Using alp to return data using direct forward
     When the requester starts a session for this command
     Then the responder should receive an unsolicited response
     And the requester should not receive a response
+    And there should be no reboots
 
 @alp
 Scenario: Using alp to return data when break query succeeds
@@ -38,6 +40,7 @@ Scenario: Using alp to return data when break query succeeds
     When the requester starts a session for this command
     Then the responder should receive an unsolicited response
     And the requester should not receive a response
+    And there should be no reboots
 
 @alp
 Scenario: Using alp to not return data when break query fails
@@ -50,6 +53,7 @@ Scenario: Using alp to not return data when break query fails
     When the requester starts a session for this command
     Then the responder should not receive an unsolicited response
     And the requester should not receive a response
+    And there should be no reboots
 
 Scenario: Node performing continuous scan will receive message encoded message larger than 255 bytes
     Given a default access class

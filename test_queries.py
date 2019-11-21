@@ -214,3 +214,8 @@ def query_cmd_generic(context, test_device, comp_type, value_comparison):
 def return_result(context, result_count):
   assert len(context.response) == 1, "expected one response"
   assert len(context.response[0].actions) == int(result_count), "expected {} return file action".format(result_count)
+
+@then("there should be no reboots")
+def check_reboots(dut, test_device):
+  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
+  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"

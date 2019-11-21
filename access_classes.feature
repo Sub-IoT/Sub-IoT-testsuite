@@ -9,6 +9,7 @@ Scenario: Node performing background scan is accessible
     And a DUT, using this access profile
     When the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class
     Then the requester should receive the responses
+    And there should be no reboots
 
     Examples: example1
     | channel_class | coding | tsched  |
@@ -33,6 +34,7 @@ Scenario: Node performing background scan is accessible, using UID
     And a DUT, using this access profile
     When the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class for a specific UID
     Then the requester should receive the responses
+    And there should be no reboots
 
     Examples: example1
     | channel_class | coding | tsched  |
@@ -45,6 +47,7 @@ Scenario: Node performing background scan is not accessible, when using wrong UI
     And a DUT, using this access profile
     When the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class for a specific (wrong) UID
     Then the requester should not receive the responses
+    And there should be no reboots
 
     Examples: example1
     | channel_class | coding | tsched  |

@@ -5,6 +5,7 @@ Scenario: Creating a user file
     When creating a user file
     Then the new file should be accessible
     And the new file header should be as expected
+    And there should be no reboots
 
 Scenario: System file is defined, having the correct header and the file data be parsed
     Given a serial modem
@@ -12,6 +13,7 @@ Scenario: System file is defined, having the correct header and the file data be
     Then the data should be parseable according to system file <system_file>
     And the file permissions of <system_file> should equal <permissions>
     And the properties of <system_file> should be as expected
+    And there should be no reboots
 
 Examples: example1
     | system_file | permissions |
@@ -59,5 +61,6 @@ Examples: example1
 #    Then the data should be parseable according to system file <system_file>
 #    And the file permissions of <system_file> should equal <permissions>
 #    And the properties of <system_file> should be as expected
+#    And there should be no reboots
 
 

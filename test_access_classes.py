@@ -26,7 +26,7 @@ from time import sleep
 from pytest_bdd import scenario, given, when, then
 
 from conftest import change_access_profile, create_access_profile, set_active_access_class, \
-  wait_for_unsolicited_response
+  wait_for_unsolicited_response, reset_board
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -77,6 +77,7 @@ def access_profile(channel_class, coding, tsched, default_channel_index):
 
 @given("a testdevice using this access profile")
 def change_access_profile_test_device(test_device, access_profile):
+  reset_board(test_device)
   change_access_profile(test_device, access_profile, 0)
   set_active_access_class(test_device, 0x01)
   sleep(2)  # give some time to switch AP
@@ -85,6 +86,7 @@ def change_access_profile_test_device(test_device, access_profile):
 
 @given("a DUT, using this access profile")
 def change_access_profile_dut(dut, access_profile):
+  reset_board(dut)
   change_access_profile(dut, access_profile, 0)
   set_active_access_class(dut, 0x01)
   dut.clear_unsolicited_responses_received()
@@ -179,3 +181,8 @@ def validate_received(context, loop_count):
 def validate_received(context, loop_count):
   assert context.succeeded == 0, \
     "the requester should not have received the responses"
+
+@then("there should be no reboots")
+def check_reboots(dut, test_device):
+  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
+  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"
