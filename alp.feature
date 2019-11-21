@@ -51,6 +51,7 @@ Scenario: Using alp to not return data when break query fails
     Then the responder should not receive an unsolicited response
     And the requester should not receive a response
 
+@qdksfj
 Scenario: Node performing continuous scan will receive message encoded message larger than 255 bytes
     Given a default access class
     And a requester, set to default access class
@@ -59,5 +60,6 @@ Scenario: Node performing continuous scan will receive message encoded message l
     And a command, with FEC encoding longer than 255 bytes
     When the requester starts a session for this command
     Then the responder should receive an unsolicited response
+    And the requester should not receive a response
 
 
