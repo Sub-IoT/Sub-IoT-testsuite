@@ -31,6 +31,7 @@ from d7a.phy.channel_header import ChannelHeader, ChannelBand, ChannelCoding, Ch
 from d7a.phy.subband import SubBand
 from d7a.system_files.access_profile import AccessProfileFile
 from d7a.system_files.dll_config import DllConfigFile
+from d7a.system_files.engineering_mode import EngineeringModeFile
 from d7a.types.ct import CT
 from modem.modem import Modem
 from datetime import datetime
@@ -91,6 +92,29 @@ def context():
 
   return Context()
 
+@pytest.fixture(autouse=True)
+def reset_before_check_after(test_device, dut):
+  reset_board(test_device)
+  reset_board(dut)
+
+  yield
+
+  assert len(dut.get_rebooted_received()) == 0, "dut device got rebooted"
+  assert len(test_device.get_rebooted_received()) == 0, "test device got rebooted"
+
+def reset_board(modem):
+  modem.clear_rebooted_received()
+  file = EngineeringModeFile()
+  resp = modem.execute_command(
+    alp_command=Command.create_with_write_file_action(
+      file_id=5,
+      data=list(file)
+    )
+  )
+  assert resp, "Reset board failed!"
+  wait_for_rebooted_response(modem)
+  modem.clear_rebooted_received()
+
 
 def create_access_profile(channel_header, channel_index, enable_channel_scan, scan_automation_period=CT.compress(0)):
   # create a simple access profile, assuming only one subprofile and one subband for now. By setting enable_channel_scan we are listening continuously on
@@ -107,7 +131,7 @@ def create_access_profile(channel_header, channel_index, enable_channel_scan, sc
     sub_bands=[SubBand(
       channel_index_start=channel_index,
       channel_index_end=channel_index,
-      eirp=10,
+      eirp=0,
       cca=80
     )] * 8
   )
@@ -135,3 +159,15 @@ def wait_for_unsolicited_response(modem):
 
   if timeout:
     assert False, "Timed out waiting for unsolicited response"
+
+def wait_for_rebooted_response(modem):
+  start_time = datetime.now()
+  timeout = False
+  while len(modem.get_rebooted_received()) == 0 and not timeout:
+    if (datetime.now() - start_time).total_seconds() >= 60:
+      timeout = True
+    else:
+      sleep(0.05)
+
+  if timeout:
+    assert False, "Timed out waiting for rebooted"
