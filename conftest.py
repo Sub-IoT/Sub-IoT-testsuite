@@ -83,7 +83,7 @@ def default_channel_header():
 
 @pytest.fixture(scope="session")
 def default_channel_index():
-  return 40
+  return 32
 
 @pytest.fixture
 def context():
