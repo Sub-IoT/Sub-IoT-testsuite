@@ -90,7 +90,7 @@ def create_different_access_class(context, default_channel_header, default_chann
 @given("a requester, set to default access class")
 def requester_default(test_device, context):
     change_access_profile(test_device,
-                          context.default_access_profile,
+                          context.default_access_profile_scan,
                           1)
     set_active_access_class(test_device, 0x11)
     sleep(1)  # give some time to switch AP
@@ -98,7 +98,7 @@ def requester_default(test_device, context):
 
 @given("on the requester, create different access class")
 def requester_create_different_access_class(test_device, context):
-    change_access_profile(test_device, context.access_profile, 2)
+    change_access_profile(test_device, context.access_profile_scan, 2)
     return test_device
 
 

@@ -53,6 +53,9 @@ def test_qos_response_mode_Any_with_response():
 def requester(test_device, default_channel_header, default_channel_index):
   change_access_profile(test_device,
                         create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=False))
+  change_access_profile(test_device,
+                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
+                        specifier=1)
   set_active_access_class(test_device, 0x01)
   sleep(1)  # give some time to switch AP
   return test_device
@@ -61,8 +64,9 @@ def requester(test_device, default_channel_header, default_channel_index):
 @given("a responder, listening for foreground packets")
 def responder(dut, default_channel_header, default_channel_index):
   change_access_profile(dut,
-                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True))
-  set_active_access_class(dut, 0x01)
+                        create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
+                        specifier=1)
+  set_active_access_class(dut, 0x11)
   sleep(1)  # give some time to switch AP
   dut.clear_unsolicited_responses_received()
   return dut
@@ -73,7 +77,7 @@ def interface_config_no(context):
   context.interface_config = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO),
     addressee=Addressee(
-      access_class=0x01,
+      access_class=0x11,
       id_type=IdType.NBID,
       id=CT(1, 1) # assuming 1 responder here
     )
@@ -84,7 +88,7 @@ def interface_config_any(context):
   context.interface_config = Configuration(
     qos=QoS(resp_mod=ResponseMode.RESP_MODE_ANY),
     addressee=Addressee(
-      access_class=0x01,
+      access_class=0x11,
       id_type=IdType.NBID,
       id=CT(1, 1)  # assuming 1 responder here
     )

@@ -111,7 +111,7 @@ def channel_configuration(band, channel_class, index):
 @given("a testdevice using an access profile based on this channel configuration")
 def change_access_profile_test_device(test_device, channel_configuration):
   change_access_profile(test_device,
-                        create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=False))
+                        create_access_profile(channel_configuration['channel_header'], channel_configuration['channel_index'], enable_channel_scan=True))
   set_active_access_class(test_device, 0x01)
   sleep(2)  # give some time to switch AP
 
