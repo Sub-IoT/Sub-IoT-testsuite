@@ -132,7 +132,7 @@ def create_access_profile(channel_header, channel_index, enable_channel_scan, sc
       channel_index_start=channel_index,
       channel_index_end=channel_index,
       eirp=0,
-      cca=80
+      cca=86
     )] * 8
   )
 
@@ -145,7 +145,7 @@ def change_access_profile(modem, access_profile, specifier=0):
   assert resp, "Setting Access Profile failed!"
 
 def set_active_access_class(modem, access_class):
-  resp = modem.execute_command(Command.create_with_write_file_action_system_file(DllConfigFile(active_access_class=access_class)))
+  resp = modem.execute_command(Command.create_with_write_file_action_system_file(DllConfigFile(active_access_class=access_class, nf_ctrl=0x22)))
   assert resp, "Setting active access class failed!"
 
 def wait_for_unsolicited_response(modem):

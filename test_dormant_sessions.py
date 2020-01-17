@@ -98,7 +98,7 @@ def requester_scanning(test_device, ap_not_scanning, ap_scanning):
 
 @given("a responder, which scans continuously")
 def responder(dut, ap_not_scanning, ap_scanning):
-  change_access_profile(dut, ap_not_scanning, specifier=0)
+  change_access_profile(dut, ap_scanning, specifier=0)
   change_access_profile(dut, ap_scanning, specifier=1)
   set_active_access_class(dut, 0x11)
   sleep(0.5)  # give some time to switch AP
