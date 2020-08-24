@@ -8,7 +8,8 @@ Scenario: Send and receive an unencrypted message
   And an interface configuration using the default scan access class and using no encryption
   And a command, direct forward using this interface configuration
   When the requester starts a session for this command
-  Then the responder should receive an unsolicited response
+  Then the requester s session should complete successfully
+  And the responder should receive an unsolicited response
 
 
 @aes
@@ -22,7 +23,8 @@ Scenario: Send and receive an encrypted message using aes ctr with same keys
   And an interface configuration using the default scan access class and using AES CTR
   And a command, direct forward using this interface configuration
   When the requester starts a session for this command
-  Then the responder should receive an unsolicited response
+  Then the requester s session should complete successfully
+  And the responder should receive an unsolicited response
 
 
 @aes
@@ -37,7 +39,8 @@ Scenario: Send and not receive an encrypted message using aes ctr with different
   And an interface configuration using the default scan access class and using AES CTR
   And a command, direct forward using this interface configuration
   When the requester starts a session for this command
-  Then the responder should not receive an unsolicited response
+  Then the requester s session should not complete successfully
+  And the responder should not receive an unsolicited response
 
 @aes
 Scenario: Send and receive an encrypted message using aes cbc with same keys
@@ -50,7 +53,8 @@ Scenario: Send and receive an encrypted message using aes cbc with same keys
   And an interface configuration using the default scan access class and using AES CBC
   And a command, direct forward using this interface configuration
   When the requester starts a session for this command
-  Then the responder should receive an unsolicited response
+  Then the requester s session should complete successfully
+  And the responder should receive an unsolicited response
 
 
 @aes
@@ -65,7 +69,8 @@ Scenario: Send and not receive an encrypted message using aes cbc with different
   And an interface configuration using the default scan access class and using AES CBC
   And a command, direct forward using this interface configuration
   When the requester starts a session for this command
-  Then the responder should not receive an unsolicited response
+  Then the requester s session should not complete successfully
+  And the responder should not receive an unsolicited response
 
 
 @aes
@@ -79,7 +84,8 @@ Scenario: Send and receive an encrypted message using aes ccm with same keys
   And an interface configuration using the default scan access class and using AES CCM
   And a command, direct forward using this interface configuration
   When the requester starts a session for this command
-  Then the responder should receive an unsolicited response
+  Then the requester s session should complete successfully
+  And the responder should receive an unsolicited response
 
 
 @aes
@@ -94,5 +100,6 @@ Scenario: Send and not receive an encrypted message using aes ccm with different
   And an interface configuration using the default scan access class and using AES CCM
   And a command, direct forward using this interface configuration
   When the requester starts a session for this command
-  Then the responder should not receive an unsolicited response
+  Then the requester s session should not complete successfully
+  And the responder should not receive an unsolicited response
 

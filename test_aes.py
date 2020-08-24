@@ -154,7 +154,7 @@ def interface_conf_default(context, Nls_Method):
     context.interface_conf = InterfaceConfiguration(
         interface_id=InterfaceType.D7ASP,
         interface_configuration=Configuration(
-            qos=QoS(resp_mod=ResponseMode.RESP_MODE_NO, retry_mod=RetryMode.RETRY_MODE_NO),
+            qos=QoS(resp_mod=ResponseMode.RESP_MODE_PREFERRED, retry_mod=RetryMode.RETRY_MODE_NO),
             addressee=Addressee(
                 access_class=0x21,
                 id_type=IdType.NBID,
@@ -178,6 +178,20 @@ def push_unsolicited(test_device, context, loop_count):
     for i in range(loop_count):
         context.responses.append(test_device.execute_command(context.request, timeout_seconds=20))
         # we cannot use return value from when step as fixture apparently, so use context object
+
+
+@then('the requester s session should complete successfully')
+def check_success(context, loop_count):
+    for i in range(loop_count):
+        answ = context.responses[i][len(context.responses[i]) - 1]
+        assert answ.execution_completed and not answ.completed_with_error, "the session did not complete {} {}".format(answ.execution_completed, answ.completed_with_error)
+
+
+@then('the requester s session should not complete successfully')
+def check_success(context, loop_count):
+    for i in range(loop_count):
+        answ = context.responses[i][len(context.responses[i]) - 1]
+        assert answ.execution_completed and answ.completed_with_error, "the session did complete successfully {} {}".format(answ.execution_completed, answ.completed_with_error)
 
 
 @then('the responder should receive an unsolicited response')
