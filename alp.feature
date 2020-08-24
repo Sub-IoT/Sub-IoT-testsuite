@@ -55,7 +55,7 @@ Scenario: Node performing continuous scan will receive message encoded message l
     Given a default access class
     And a requester, set to default access class
     And a responder, listening for foreground packets on the default access class
-    an interface configuration using this default access class
+    And an interface configuration using this default access class
     And a command, with FEC encoding longer than 255 bytes
     When the requester starts a session for this command
     Then the responder should receive an unsolicited response
