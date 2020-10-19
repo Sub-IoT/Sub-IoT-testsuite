@@ -64,7 +64,7 @@ def user_file_accessible(serial_modem):
   resp = serial_modem.execute_command(Command.create_with_read_file_action(file_id=0x39, length=1))
   assert(len(resp[0].actions) == 1)
   assert(type(resp[0].actions[0]) == RegularAction)
-  assert(resp[0].actions[0].operand.offset.id ==0x40)
+  assert(resp[0].actions[0].operand.offset.id ==0x39)
 
 @then('the new file header should be as expected')
 def user_file_header_correct(serial_modem, context):
