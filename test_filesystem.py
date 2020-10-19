@@ -51,24 +51,24 @@ def create_userfile(serial_modem, context):
     ),
     properties=FileProperties(act_enabled=False, act_condition=ActionCondition.WRITE,
                               storage_class=StorageClass.PERMANENT),
-    alp_command_file_id=0x41,
-    interface_file_id=0x42,
+    alp_command_file_id=0x37,
+    interface_file_id=0x38,
     file_size=1,
     allocated_size=1
   )
 
-  serial_modem.execute_command(Command.create_with_create_new_file(file_id=0x40, file_header=context.file_header))
+  serial_modem.execute_command(Command.create_with_create_new_file(file_id=0x39, file_header=context.file_header))
 
 @then('the new file should be accessible')
 def user_file_accessible(serial_modem):
-  resp = serial_modem.execute_command(Command.create_with_read_file_action(file_id=0x40, length=1))
+  resp = serial_modem.execute_command(Command.create_with_read_file_action(file_id=0x39, length=1))
   assert(len(resp[0].actions) == 1)
   assert(type(resp[0].actions[0]) == RegularAction)
   assert(resp[0].actions[0].operand.offset.id ==0x40)
 
 @then('the new file header should be as expected')
 def user_file_header_correct(serial_modem, context):
-  resp = serial_modem.execute_command(Command.create_with_read_file_header(file_id=0x40))
+  resp = serial_modem.execute_command(Command.create_with_read_file_header(file_id=0x39))
   assert(len(resp[0].actions) == 1)
   header = resp[0].actions[0].operand.file_header
   assert (header == context.file_header)
