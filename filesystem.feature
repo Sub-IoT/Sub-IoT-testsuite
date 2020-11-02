@@ -17,7 +17,7 @@ Examples: example1
     | system_file | permissions |
     | 0           | r--r--      | # UID
     # TODO | 1           | r--r--      | # Factory settings
-    # | 2           | r--r--      | # Firmware version
+    | 2           | r--r--      | # Firmware version
     # TODO | 3           | r--r--      | # Device capacity
     # TODO | 4           | r--r--      | # Device status
     # TODO | 5           | r--r--      | # Engineering mode
