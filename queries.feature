@@ -1,17 +1,20 @@
 Feature: Queries
 
+@queries
 Scenario: When predicate of Break Query action fails all subsequent actions are dropped
     Given a command containing a Break Query action, which results in a fail, and a Read action
     When the testdevice executes the command
     Then the command executes successfully
     And the Read action does not return a result
 
+@queries
 Scenario: When predicate of Break Query action succeeds all subsequent actions are executed
     Given a command containing a Break Query action, which results in a success, and a Read action
     When the testdevice executes the command
     Then the command executes successfully
     And the Read action does return a result
-    
+
+@queries
 Scenario: Validate correct execution of queries with arithmetic comparison
     Given a command containing a query with a <comp_type> comparison comparing a known value with a value which is <value_comparison>, and a Read action
     When the testdevice executes the command

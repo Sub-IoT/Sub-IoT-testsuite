@@ -40,14 +40,14 @@ def test_filesystem_create_user_file():
 def create_userfile(serial_modem, context):
   context.file_header = FileHeader(
     permissions=FilePermissions(
-      executeable=True,
+      executable=True,
       encrypted=False,
       user_readable=True,
-      user_writeable=True,
-      user_executeable=False,
+      user_writable=True,
+      user_executable=False,
       guest_readable=True,
-      guest_executeable=False,
-      guest_writeable=False
+      guest_executable=False,
+      guest_writable=False
     ),
     properties=FileProperties(act_enabled=False, act_condition=ActionCondition.WRITE,
                               storage_class=StorageClass.PERMANENT),
@@ -103,10 +103,10 @@ def parse_permissions(perm_str):
   if perm_str[3] == 'r': gr = True
   if perm_str[4] == 'w': gr = True
   if perm_str[5] == 'x': gx = True
-  return FilePermissions(encrypted=False, executeable=False, user_readable=ur,
-                         user_writeable=uw, user_executeable=ux,
-                         guest_readable=gr, guest_writeable=gw,
-                         guest_executeable=gx)
+  return FilePermissions(encrypted=False, executable=False, user_readable=ur,
+                         user_writable=uw, user_executable=ux,
+                         guest_readable=gr, guest_writable=gw,
+                         guest_executable=gx)
 
 
 @then("the file permissions of <system_file> should equal <permissions>")

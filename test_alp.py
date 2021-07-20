@@ -128,14 +128,14 @@ def responder_default(dut, context):
 def file_write_requester_right(test_device):
     file_header = FileHeader(
         permissions=FilePermissions(
-            executeable=True,
+            executable=True,
             encrypted=False,
             user_readable=True,
-            user_writeable=True,
-            user_executeable=False,
+            user_writable=True,
+            user_executable=False,
             guest_readable=True,
-            guest_executeable=False,
-            guest_writeable=False
+            guest_executable=False,
+            guest_writable=False
         ),
         properties=FileProperties(act_enabled=False, act_condition=ActionCondition.WRITE,
                                   storage_class=StorageClass.PERMANENT),
@@ -156,14 +156,14 @@ def file_write_requester_right(test_device):
 def file_write_requester_false(test_device):
     file_header = FileHeader(
         permissions=FilePermissions(
-            executeable=True,
+            executable=True,
             encrypted=False,
             user_readable=True,
-            user_writeable=True,
-            user_executeable=False,
+            user_writable=True,
+            user_executable=False,
             guest_readable=True,
-            guest_executeable=False,
-            guest_writeable=False
+            guest_executable=False,
+            guest_writable=False
         ),
         properties=FileProperties(act_enabled=False, act_condition=ActionCondition.WRITE,
                                   storage_class=StorageClass.PERMANENT),
@@ -212,14 +212,14 @@ def interface_conf_default(context):
 def file_write_requester(test_device, context):
     file_header = FileHeader(
       permissions=FilePermissions(
-          executeable=True,
+          executable=True,
           encrypted=False,
           user_readable=True,
-          user_writeable=True,
-          user_executeable=False,
+          user_writable=True,
+          user_executable=False,
           guest_readable=True,
-          guest_executeable=False,
-          guest_writeable=False
+          guest_executable=False,
+          guest_writable=False
       ),
       properties=FileProperties(act_enabled=False, act_condition=ActionCondition.WRITE,
                                 storage_class=StorageClass.PERMANENT),
