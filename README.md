@@ -1,6 +1,6 @@
-# OSS-7 Testsuite
+# Sub-IoT Testsuite
 
-Used for over the air integration testing on hardware, using 2 OSS-7 modems attached using serial.
+Used for over the air integration testing on hardware, using 2 Sub-IoT-Stack modems attached using serial.
 The testsuite covers a range of DASH7 features, but is not complete yet.
 
 install deps:

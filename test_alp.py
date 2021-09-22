@@ -1,8 +1,8 @@
 #
 # Copyright (c) 2017-2019 University of Antwerp, Aloxy NV.
 #
-# This file is part of OSS-7 Testsuite
-# (see https://github.com/MOSAIC-LoPoW/oss7-testsuite).
+# This file is part of Sub-IoT Testsuite
+# (see https://github.com/Sub-IoT/Sub-IoT-testsuite).
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
