@@ -36,61 +36,113 @@ from d7a.sp.qos import ResponseMode, QoS
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, normal rate class, channel index 0')
+          'Communication using 868, normal rate class, channel index 0 using PN9')
 def test_channel_configuration():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, normal rate class, channel index 270')
+          'Communication using 868, normal rate class, channel index 270 using PN9')
 def test_channel_configuration_2():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, hi rate class, channel index 0')
+          'Communication using 868, hi rate class, channel index 0 using PN9')
 def test_channel_configuration_3():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, hi rate class, channel index 270')
+          'Communication using 868, hi rate class, channel index 270 using PN9')
 def test_channel_configuration_4():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, lo rate class, channel index 0')
+          'Communication using 868, lo rate class, channel index 0 using PN9')
 def test_channel_configuration_5():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, lo rate class, channel index 279')
+          'Communication using 868, lo rate class, channel index 279 using PN9')
 def test_channel_configuration_6():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 433, normal rate class, channel index 0')
+          'Communication using 433, normal rate class, channel index 0 using PN9')
 def test_channel_configuration_7():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 915, normal rate class, channel index 0')
+          'Communication using 915, normal rate class, channel index 0 using PN9')
 def test_channel_configuration_8():
   pass
 
 
 @scenario('channel_configurations.feature',
-          'Communication using 868, lora class, channel index 0')
+          'Communication using 868, lora class, channel index 0 using PN9')
 def test_channel_configuration_9():
   pass
 
-@given(parsers.parse("a channel configuration using {band:Number} band, {channel_class} class and channel index {index:Number}",
+@scenario('channel_configurations.feature',
+          'Communication using 868, normal rate class, channel index 0 using FEC and PN9')
+def test_channel_configuration_11():
+  pass
+
+@scenario('channel_configurations.feature',
+          'Communication using 868, normal rate class, channel index 270 using FEC and PN9')
+def test_channel_configuration_12():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 868, hi rate class, channel index 0 using FEC and PN9')
+def test_channel_configuration_13():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 868, hi rate class, channel index 270 using FEC and PN9')
+def test_channel_configuration_14():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 868, lo rate class, channel index 0 using FEC and PN9')
+def test_channel_configuration_15():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 868, lo rate class, channel index 279 using FEC and PN9')
+def test_channel_configuration_16():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 433, normal rate class, channel index 0 using FEC and PN9')
+def test_channel_configuration_17():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 915, normal rate class, channel index 0 using FEC and PN9')
+def test_channel_configuration_18():
+  pass
+
+
+@scenario('channel_configurations.feature',
+          'Communication using 868, lora class, channel index 0 using FEC and PN9')
+def test_channel_configuration_19():
+  pass
+
+@given(parsers.parse("a channel configuration using {band:Number} band, {channel_class} class and channel index {index:Number} using {channel_coding}",
                      extra_types=dict(Number=int)))
-def channel_configuration(band, channel_class, index):
+def channel_configuration(band, channel_class, index, channel_coding):
   if band == 868: channel_band = ChannelBand.BAND_868
   elif band == 433: channel_band = ChannelBand.BAND_433
   elif band == 915: channel_band = ChannelBand.BAND_915
@@ -102,8 +154,12 @@ def channel_configuration(band, channel_class, index):
   elif channel_class == "lora": channel_class = ChannelClass.LORA
   else: raise Exception("Invalid rate")
 
+  if channel_coding == "PN9": channel_coding = ChannelCoding.PN9
+  elif channel_coding == "FEC and PN9": channel_coding = ChannelCoding.FEC_PN9
+  else: raise Exception("Invalid coding")
+
   return {
-    "channel_header": ChannelHeader(channel_band=channel_band, channel_coding=ChannelCoding.PN9, channel_class=channel_class),
+    "channel_header": ChannelHeader(channel_band=channel_band, channel_coding=channel_coding, channel_class=channel_class),
     "channel_index": index
   }
 
