@@ -23,10 +23,9 @@
 #
 from time import sleep
 
-from pytest_bdd import scenario, given, when, then
+from pytest_bdd import scenario, given, when, then, parsers
+from conftest import change_access_profile, create_access_profile, set_active_access_class
 
-from conftest import change_access_profile, create_access_profile, set_active_access_class, \
-  wait_for_unsolicited_response
 from d7a.alp.command import Command
 from d7a.alp.interface import InterfaceType
 from d7a.d7anp.addressee import Addressee, IdType
@@ -52,7 +51,7 @@ def test_bg_uid():
 def test_bg_wrong_uid():
   pass
 
-@given("an access profile using <channel_class> channel class <coding> coding with one subband which has a scan automation period of <tsched>")
+@given(parsers.parse("an access profile using {channel_class} channel class {coding} coding with one subband which has a scan automation period of {tsched}"), target_fixture="access_profile")
 def access_profile(channel_class, coding, tsched, default_channel_index):
   if channel_class == "lo":
     cl = ChannelClass.LO_RATE

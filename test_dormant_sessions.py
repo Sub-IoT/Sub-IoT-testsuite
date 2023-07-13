@@ -21,9 +21,8 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import pytest
 from time import sleep
-from pytest_bdd import scenario, given, when, then
+from pytest_bdd import scenario, given, when, then, parsers
 from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
   set_active_access_class
 from d7a.alp.command import Command
@@ -32,7 +31,6 @@ from d7a.d7anp.addressee import Addressee, IdType
 from d7a.phy.channel_header import ChannelClass
 from d7a.sp.configuration import Configuration
 from d7a.sp.qos import ResponseMode, QoS
-from d7a.system_files.uid import UidFile
 from d7a.types.ct import CT
 
 
@@ -63,20 +61,20 @@ def get_channel_class(channel_class_string):
   else:
     assert False
 
-@given("an access profile using <channel_class> which does not scan")
+@given(parsers.parse("an access profile using {channel_class} which does not scan"), target_fixture="ap_not_scanning")
 def ap_not_scanning(channel_class, default_channel_header, default_channel_index):
   channel_header = default_channel_header
   channel_header.channel_class = get_channel_class(channel_class)
   return create_access_profile(channel_header, default_channel_index, enable_channel_scan=False)
 
-@given("an access profile using <channel_class> which does scan continuously")
+@given(parsers.parse("an access profile using {channel_class} which does scan continuously"), target_fixture="ap_scanning")
 def ap_scanning(channel_class, default_channel_header, default_channel_index):
   channel_header = default_channel_header
   channel_header.channel_class = get_channel_class(channel_class)
   return create_access_profile(channel_header, default_channel_index, enable_channel_scan=True)
 
 
-@given("a requester, which does not scan")
+@given("a requester, which does not scan", target_fixture="requester")
 def requester(test_device, ap_not_scanning, ap_scanning):
   sleep(2)
   change_access_profile(test_device, ap_not_scanning, specifier=0)
@@ -87,8 +85,8 @@ def requester(test_device, ap_not_scanning, ap_scanning):
   return test_device
 
 
-@given("a requester, which scans continuously")
-def requester_scanning(test_device, ap_not_scanning, ap_scanning):
+@given("a requester, which scans continuously", target_fixture="requester")
+def requester_scanning(test_device, ap_scanning):
   change_access_profile(test_device, ap_scanning, specifier=0)
   change_access_profile(test_device, ap_scanning, specifier=1)
   set_active_access_class(test_device, 0x01)
@@ -96,8 +94,8 @@ def requester_scanning(test_device, ap_not_scanning, ap_scanning):
   test_device.clear_unsolicited_responses_received()
   return test_device
 
-@given("a responder, which scans continuously")
-def responder(dut, ap_not_scanning, ap_scanning):
+@given("a responder, which scans continuously", target_fixture="responder")
+def responder(dut, ap_scanning):
   change_access_profile(dut, ap_scanning, specifier=0)
   change_access_profile(dut, ap_scanning, specifier=1)
   set_active_access_class(dut, 0x11)

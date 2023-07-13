@@ -15,12 +15,11 @@ Scenario: When predicate of Break Query action succeeds all subsequent actions a
     And the Read action does return a result
 
 @queries
-Scenario: Validate correct execution of queries with arithmetic comparison
+Scenario Outline: Validate correct execution of queries with arithmetic comparison
     Given a command containing a query with a <comp_type> comparison comparing a known value with a value which is <value_comparison>, and a Read action
     When the testdevice executes the command
     Then the command executes successfully
     And the Read action does return <result_count> results
-
     Examples: example1
     | comp_type | value_comparison  | result_count  |
     | >         | bigger            | 0             |

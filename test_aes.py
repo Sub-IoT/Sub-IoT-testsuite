@@ -21,17 +21,12 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import pytest
 from time import sleep
 from pytest_bdd import scenario, given, when, then, parsers
 from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
   set_active_access_class
 from random import SystemRandom
 from d7a.alp.command import Command
-from d7a.alp.regular_action import RegularAction
-from d7a.fs.file_header import FileHeader
-from d7a.fs.file_permissions import FilePermissions
-from d7a.fs.file_properties import FileProperties, ActionCondition, StorageClass
 from d7a.sp.configuration import Configuration
 from d7a.system_files.interface_configuration import InterfaceConfigurationFile
 from d7a.system_files.security_key import SecurityKeyFile
@@ -40,12 +35,6 @@ from d7a.alp.operands.interface_configuration import InterfaceConfiguration
 from d7a.sp.qos import QoS, ResponseMode, RetryMode
 from d7a.d7anp.addressee import Addressee, IdType, NlsMethod
 from d7a.types.ct import CT
-from d7a.alp.operations.responses import ReturnFileData
-from d7a.alp.operations.break_query import BreakQuery
-from d7a.alp.operands.file import Data
-from d7a.alp.operands.offset import Offset
-from d7a.alp.operands.length import Length
-from d7a.alp.operands.query import QueryOperand, QueryType, ArithQueryParams, ArithComparisonType
 
 
 @scenario("aes.feature", "Send and receive an unencrypted message")

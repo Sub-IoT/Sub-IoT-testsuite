@@ -1,7 +1,7 @@
-pytest==3.3.1
-pytest-timeout==1.2.1
-pytest-bdd==2.19.0
-py==1.5.2
-pluggy==0.6.0
-pytest-spec==0.2.24
-attrs==19.1.0
+pytest==7.0.1
+pytest-timeout==2.1.0
+pytest-bdd==5.0.0
+py==1.11.0
+pluggy==1.0.0
+pytest-spec==3.2.0
+attrs==22.2.0

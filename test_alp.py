@@ -21,7 +21,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import pytest
 from time import sleep
 from pytest_bdd import scenario, given, when, then
 from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
@@ -36,8 +35,7 @@ from d7a.system_files.interface_configuration import InterfaceConfigurationFile
 from d7a.alp.interface import InterfaceType
 from d7a.alp.operands.interface_configuration import InterfaceConfiguration
 from d7a.sp.qos import QoS, ResponseMode, RetryMode
-from d7a.d7anp.addressee import Addressee, IdType, NlsMethod
-from d7a.types.ct import CT
+from d7a.d7anp.addressee import Addressee, IdType
 from d7a.alp.operations.responses import ReturnFileData
 from d7a.alp.operations.break_query import BreakQuery
 from d7a.alp.operands.file import Data

@@ -141,7 +141,7 @@ def test_channel_configuration_19():
   pass
 
 @given(parsers.parse("a channel configuration using {band:Number} band, {channel_class} class and channel index {index:Number} using {channel_coding}",
-                     extra_types=dict(Number=int)))
+                     extra_types=dict(Number=int)), target_fixture="channel_configuration")
 def channel_configuration(band, channel_class, index, channel_coding):
   if band == 868: channel_band = ChannelBand.BAND_868
   elif band == 433: channel_band = ChannelBand.BAND_433

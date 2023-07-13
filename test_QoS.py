@@ -21,7 +21,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import pytest
 from time import sleep
 from pytest_bdd import scenario, given, when, then
 from conftest import change_access_profile, create_access_profile, wait_for_unsolicited_response, \
@@ -49,7 +48,7 @@ def test_qos_response_mode_Any_with_response():
   pass
 
 
-@given("a requester")
+@given("a requester", target_fixture="requester")
 def requester(test_device, default_channel_header, default_channel_index):
   change_access_profile(test_device,
                         create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=False))
@@ -61,7 +60,7 @@ def requester(test_device, default_channel_header, default_channel_index):
   return test_device
 
 
-@given("a responder, listening for foreground packets")
+@given("a responder, listening for foreground packets", target_fixture="responder")
 def responder(dut, default_channel_header, default_channel_index):
   change_access_profile(dut,
                         create_access_profile(default_channel_header, default_channel_index, enable_channel_scan=True),
@@ -118,7 +117,6 @@ def command_with_resp(context):
 def push_unsolicited(requester, context, loop_count):
   context.responses = []
   for i in range(loop_count):
-    print context.request
     context.responses.append(requester.execute_command(context.request, timeout_seconds=20))
     # we cannot use return value from when step as fixture apparently, so use context object
 

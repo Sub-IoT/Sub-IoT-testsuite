@@ -3,13 +3,12 @@ Feature: Access Classes
 # continuous FG scanning (Tsched == 0) is already tested in the QoS or channel configurations, we will skip this here
 
 @loop @bg
-Scenario: Node performing background scan is accessible
+Scenario Outline: Node performing background scan is accessible
     Given an access profile using <channel_class> channel class <coding> coding with one subband which has a scan automation period of <tsched>
     And a testdevice using this access profile
     And a DUT, using this access profile
     When the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class
     Then the requester should receive the responses
-
     Examples: example1
     | channel_class | coding | tsched  |
     | lo            | PN9    | 1024    |
@@ -27,19 +26,18 @@ Scenario: Node performing background scan is accessible
 
 
 @loop @bg
-Scenario: Node performing background scan is accessible, using UID
+Scenario Outline: Node performing background scan is accessible, using UID
     Given an access profile using <channel_class> channel class <coding> coding with one subband which has a scan automation period of <tsched>
     And a testdevice using this access profile
     And a DUT, using this access profile
     When the testdevice executes a query (in a loop), forwarded to the D7ASP interface using this access class for a specific UID
     Then the requester should receive the responses
-
     Examples: example1
     | channel_class | coding | tsched  |
     | lo            | FEC    | 1024    |
 
 @loop @bg
-Scenario: Node performing background scan is not accessible, when using wrong UID
+Scenario Outline: Node performing background scan is not accessible, when using wrong UID
     Given an access profile using <channel_class> channel class <coding> coding with one subband which has a scan automation period of <tsched>
     And a testdevice using this access profile
     And a DUT, using this access profile

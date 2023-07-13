@@ -21,8 +21,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import pytest
-from pytest_bdd import scenario, given, when, then
+from pytest_bdd import scenario, given, when, then, parsers
 from d7a.alp.command import Command
 from d7a.alp.regular_action import RegularAction
 from d7a.fs.file_header import FileHeader
@@ -77,11 +76,11 @@ def user_file_header_correct(serial_modem, context):
 def test_filesystem_systemfiles():
   pass
 
-@given("a serial modem")
+@given("a serial modem", target_fixture="serial_modem")
 def serial_modem(test_device):
   return test_device
 
-@when('reading system file <system_file> header and data')
+@when(parsers.parse("reading system file {system_file} header and data"))
 def read_system_file(serial_modem, system_file, context):
   context.received_system_file = serial_modem.execute_command(
     Command.create_with_read_file_action_system_file(SystemFiles.files[SystemFileIds(int(system_file))]))[0]
@@ -90,9 +89,9 @@ def read_system_file(serial_modem, system_file, context):
     Command.create_with_read_file_header(int(system_file)))[0]
   assert (len(context.received_system_file_header.actions) == 1)
 
-@then("the data should be parseable according to system file <system_file>")
+@then(parsers.parse("the data should be parseable according to system file {system_file}"))
 def data_parseable(context, system_file):
-  assert(context.received_system_file.actions[0].operation.systemfile_type == SystemFiles.files[SystemFileIds(int(system_file))])
+  assert(context.received_system_file.actions[0].operation.file_type == SystemFiles.files[SystemFileIds(int(system_file))])
 
 def parse_permissions(perm_str):
   assert(len(perm_str) == 6)
@@ -109,13 +108,13 @@ def parse_permissions(perm_str):
                          guest_executable=gx)
 
 
-@then("the file permissions of <system_file> should equal <permissions>")
+@then(parsers.parse("the file permissions of {system_file} should equal {permissions}"))
 def check_perm(context, system_file, permissions):
   perm = parse_permissions(permissions)
   header = context.received_system_file_header.actions[0].operand.file_header
   assert(header.permissions == perm)
 
-@then("the properties of <system_file> should be as expected")
+@then(parsers.parse("the properties of {system_file} should be as expected"))
 def check_prop(context, system_file):
   assert (context.received_system_file_header.actions[0].operand.file_id == int(system_file))
   header = context.received_system_file_header.actions[0].operand.file_header

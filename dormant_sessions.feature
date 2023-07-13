@@ -1,7 +1,7 @@
 Feature: Dormant session
 
 @dormant
-Scenario: Dormant session succeeds for a requester which does unicast requests
+Scenario Outline: Dormant session succeeds for a requester which does unicast requests
     Given an access profile using <channel_class> which does not scan
     And an access profile using <channel_class> which does scan continuously
     And a requester, which does not scan
@@ -11,16 +11,15 @@ Scenario: Dormant session succeeds for a requester which does unicast requests
     Then the requester's session should complete successfully
     And the responder should receive an unsolicited response
     And the requester should receive the dormant session
-    And the responders's dormant session should complete successfully
-
-Examples: example1
+    And the responders's dormant session should complete successfully 
+    Examples: example1
     | channel_class |
     | lo            |
 #    | normal        |
 #    | hi            |
 
 @dormant
-Scenario: Dormant session fails for a requester which does broadcast requests
+Scenario Outline: Dormant session fails for a requester which does broadcast requests
     Given an access profile using <channel_class> which does not scan
     And an access profile using <channel_class> which does scan continuously
     And a requester, which does not scan
@@ -39,7 +38,7 @@ Examples: example1
 #    | hi            |
 
 @dormant
-Scenario: Dormant session times out as expected and fails when no response
+Scenario Outline: Dormant session times out as expected and fails when no response
     Given an access profile using <channel_class> which does not scan
     And an access profile using <channel_class> which does scan continuously
     And a requester, which does not scan
@@ -55,7 +54,7 @@ Examples: example1
 #    | hi            |
 
 @dormant
-Scenario: Dormant session times out as expected and succeeds on response
+Scenario Outline: Dormant session times out as expected and succeeds on response
     Given an access profile using <channel_class> which does scan continuously
     And a requester, which scans continuously
     And a responder, which scans continuously

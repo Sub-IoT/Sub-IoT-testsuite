@@ -21,16 +21,13 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-from time import sleep
 
 import struct
 
-import pytest
-from pytest_bdd import scenario, given, when, then
+from time import sleep
+from pytest_bdd import scenario, given, when, then, parsers
 
-from conftest import change_access_profile, create_access_profile, set_active_access_class
 from d7a.alp.command import Command
-from d7a.alp.interface import InterfaceType
 from d7a.alp.operands.file import DataRequest
 from d7a.alp.operands.length import Length
 from d7a.alp.operands.offset import Offset
@@ -38,10 +35,6 @@ from d7a.alp.operands.query import QueryOperand, QueryType, ArithQueryParams, Ar
 from d7a.alp.operations.break_query import BreakQuery
 from d7a.alp.operations.requests import ReadFileData
 from d7a.alp.regular_action import RegularAction
-from d7a.d7anp.addressee import Addressee, IdType
-from d7a.sp.configuration import Configuration
-from d7a.sp.qos import ResponseMode, QoS
-from d7a.types.ct import CT
 
 
 @scenario('queries.feature',
@@ -73,7 +66,7 @@ def query_cmd_fail(context):
       operation=ReadFileData(
         operand=DataRequest(
           offset=Offset(id=0, offset=Length(0)),
-          length=8
+          length=Length(8)
         )
       )
     )
@@ -117,7 +110,7 @@ def query_cmd_success(test_device, context):
           mask_present=False,
           params=ArithQueryParams(comp_type=ArithComparisonType.EQUALITY, signed_data_type=False),
           compare_length=Length(8),
-          compare_value=[ord(b) for b in struct.pack(">Q", int(test_device.uid, 16))],
+          compare_value=struct.pack(">Q", int(test_device.uid, 16)),
           file_a_offset=Offset(id=0, offset=Length(0))
         )
       )
@@ -128,7 +121,7 @@ def query_cmd_success(test_device, context):
       operation=ReadFileData(
         operand=DataRequest(
           offset=Offset(id=0, offset=Length(0)),
-          length=8
+          length=Length(8)
         )
       )
     )
@@ -154,7 +147,7 @@ def get_arithm_comp_to_uid_cmd(value, comp_type):
           mask_present=False,
           params=ArithQueryParams(comp_type=comp_type, signed_data_type=False),
           compare_length=Length(8),
-          compare_value=[ord(b) for b in struct.pack(">Q", value)],
+          compare_value=struct.pack(">Q", value),
           file_a_offset=Offset(id=0, offset=Length(0))
         )
       )
@@ -165,7 +158,7 @@ def get_arithm_comp_to_uid_cmd(value, comp_type):
       operation=ReadFileData(
         operand=DataRequest(
           offset=Offset(id=0, offset=Length(0)),
-          length=8
+          length=Length(8)
         )
       )
     )
@@ -176,12 +169,12 @@ def get_arithm_comp_to_uid_cmd(value, comp_type):
 
 @scenario('queries.feature',
           'Validate correct execution of queries with arithmetic comparison',
-          example_converters=dict(comp_type=str, value_comparison=str, result_count=str))
-def test_comp_generic(comp_type, value_comparison):
+          dict(comp_type=str, value_comparison=str, result_count=str))
+def test_comp_generic():
   pass
 
 
-@given("a command containing a query with a <comp_type> comparison comparing a known value with a value which is <value_comparison>, and a Read action")
+@given(parsers.parse("a command containing a query with a {comp_type} comparison comparing a known value with a value which is {value_comparison}, and a Read action"))
 def query_cmd_generic(context, test_device, comp_type, value_comparison):
   # we compare the UID file to UID, or UID - 1 or UID + 1, depending on value_comparisor
   if comp_type == ">":
@@ -210,7 +203,7 @@ def query_cmd_generic(context, test_device, comp_type, value_comparison):
 
   context.query_cmd = get_arithm_comp_to_uid_cmd(int(test_device.uid, 16) + v, c)
 
-@then("the Read action does return <result_count> results")
+@then(parsers.parse("the Read action does return {result_count} results"))
 def return_result(context, result_count):
   assert len(context.response) == 1, "expected one response"
   assert len(context.response[0].actions) == int(result_count), "expected {} return file action".format(result_count)
